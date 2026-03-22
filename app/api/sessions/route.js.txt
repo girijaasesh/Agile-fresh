@@ -1,0 +1,13 @@
+const { pool } = require('../../../lib/db');
+
+export async function GET() {
+  const result = await pool.query(`
+    SELECT s.*, c.title, c.code, c.price, c.early_bird_price
+    FROM sessions s
+    JOIN certifications c ON s.certification_id = c.id
+    WHERE s.session_date >= CURRENT_DATE
+    AND s.is_active = true
+    ORDER BY s.session_date ASC
+  `);
+  return Response.json(result.rows);
+}

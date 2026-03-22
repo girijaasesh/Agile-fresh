@@ -1,0 +1,20 @@
+const { pool } = require('../../../lib/db');
+
+export async function POST(req) {
+  const { code } = await req.json();
+
+  const result = await pool.query(
+    `SELECT * FROM coupons
+     WHERE code = $1
+     AND is_active = true
+     AND (expires_at IS NULL OR expires_at > NOW())
+     AND (max_uses IS NULL OR used_count < max_uses)`,
+    [code.toUpperCase()]
+  );
+
+  if (result.rows.length === 0) {
+    return Response.json({ valid: false });
+  }
+
+  return Response.json({ valid: true, coupon: result.rows[0] });
+}
