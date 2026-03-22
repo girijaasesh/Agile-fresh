@@ -1,7 +1,6 @@
 'use client';
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import { signIn, signOut, useSession } from 'next-auth/react';
 
 const PaymentForm = dynamic(() => import('../../components/PaymentForm'), { ssr: false });
 
@@ -222,8 +221,6 @@ const CSS = `
 // ─── Main component ────────────────────────────────────────────────────────────
 export default function QuickRegisterClient() {
   const formRef = useRef(null);
-  const { data: authSession, status } = useSession();
-
   const [form, setForm] = useState({
     name: '', email: '', phone: '', certId: '', sessionIdx: '', company: '', corpSize: '', isCorporate: false,
   });
@@ -244,16 +241,6 @@ export default function QuickRegisterClient() {
     if (sessions.length === 1) setForm(f => ({ ...f, sessionIdx: '0' }));
     else                        setForm(f => ({ ...f, sessionIdx: '' }));
   }, [form.certId, sessions.length]);
-
-  useEffect(() => {
-    if (authSession?.user) {
-      setForm(f => ({
-        ...f,
-        name: f.name || authSession.user.name || '',
-        email: f.email || authSession.user.email || '',
-      }));
-    }
-  }, [authSession]);
 
   useEffect(() => {
     const p   = new URLSearchParams(window.location.search);
@@ -401,7 +388,7 @@ export default function QuickRegisterClient() {
 
             <div ref={formRef}>
               <div className="qr-form-card">
-                {phase === 'form'    && <RegistrationForm form={form} set={set} blur={blur} fieldErr={fieldErr} cert={cert} sessions={sessions} session={session} price={price} eb={eb} seats={seats} urgency={urgency} submitting={submitting} apiError={apiError} onSubmit={handleSubmit} authSession={authSession} authStatus={status} />}
+                {phase === 'form'    && <RegistrationForm form={form} set={set} blur={blur} fieldErr={fieldErr} cert={cert} sessions={sessions} session={session} price={price} eb={eb} seats={seats} urgency={urgency} submitting={submitting} apiError={apiError} onSubmit={handleSubmit} />}
                 {phase === 'payment' && <PaymentSection   form={form} cert={cert} session={session} price={price} regId={regId} onSuccess={handlePaymentSuccess} />}
               </div>
             </div>
@@ -523,47 +510,11 @@ export default function QuickRegisterClient() {
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-function RegistrationForm({ form, set, blur, fieldErr, cert, sessions, session, price, eb, seats, urgency, submitting, apiError, onSubmit, authSession, authStatus }) {
+function RegistrationForm({ form, set, blur, fieldErr, cert, sessions, session, price, eb, seats, urgency, submitting, apiError, onSubmit }) {
   return (
     <form onSubmit={onSubmit} noValidate>
       <div className="qr-form-title">Quick Registration</div>
       <p className="qr-form-sub">Secure your seat — takes under 60 seconds</p>
-
-      {/* Google Auth Option */}
-      <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: 12, padding: 20, marginBottom: 24 }}>
-        <div style={{ textAlign: 'center', marginBottom: 16 }}>
-          <h3 style={{ fontSize: 16, color: 'var(--navy)', marginBottom: 4 }}>Quick Registration with Google</h3>
-          <p style={{ fontSize: 14, color: 'var(--slate)' }}>Sign in to auto-fill your details and register faster</p>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 12 }}>
-          <button 
-            type="button" 
-            onClick={() => signIn('google', { callbackUrl: window.location.href })}
-            style={{
-              background: '#4285F4',
-              color: 'white',
-              border: 'none',
-              borderRadius: 8,
-              padding: '12px 24px',
-              fontSize: 14,
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8
-            }}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24">
-              <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-              <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-            </svg>
-            Sign in with Google
-          </button>
-          <span style={{ color: 'var(--slate)', alignSelf: 'center', fontSize: 14 }}>or continue manually below</span>
-        </div>
-      </div>
 
       {urgency && seats !== null && (
         <div className="qr-urgency">
