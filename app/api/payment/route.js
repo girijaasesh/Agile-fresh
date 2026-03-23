@@ -2,6 +2,9 @@ export const dynamic = 'force-dynamic';
 const Stripe = require('stripe');
 
 export async function POST(req) {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    return Response.json({ error: 'STRIPE_SECRET_KEY is not set on this deployment' }, { status: 500 });
+  }
   try {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
     const { amount, currency, name, email, courseTitle } = await req.json();
