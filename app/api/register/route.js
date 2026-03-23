@@ -49,7 +49,7 @@ export async function POST(req) {
     return Response.json({ id: result.rows[0].id, created_at: result.rows[0].created_at }, { status: 201 });
 
   } catch (err) {
-    console.error('[register] DB error:', err.message);
-    return Response.json({ error: 'Registration failed. Please try again.' }, { status: 500 });
+    console.error('[register] DB error:', err.message, err.code);
+    return Response.json({ error: err.message, code: err.code }, { status: 500 });
   }
 }

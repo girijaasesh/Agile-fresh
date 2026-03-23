@@ -12,15 +12,16 @@ export const dynamic = 'force-dynamic';
 const nodemailer = require('nodemailer');
 
 async function createTransporter() {
+  const host = process.env.EMAIL_HOST || 'smtp.hostinger.com';
   const configs = [
-    { host:'smtp.hostinger.com', port:465, secure:true,  tls:{ rejectUnauthorized:false } },
-    { host:'smtp.hostinger.com', port:587, secure:false, requireTLS:true, tls:{ rejectUnauthorized:false } },
+    { host, port: parseInt(process.env.EMAIL_PORT || '465', 10), secure: true,  tls:{ rejectUnauthorized:false } },
+    { host, port: 587, secure: false, requireTLS: true, tls:{ rejectUnauthorized:false } },
   ];
   for (const cfg of configs) {
     const t = nodemailer.createTransport({ ...cfg, auth:{ user:process.env.EMAIL_USER, pass:process.env.EMAIL_PASS } });
     try { await t.verify(); return t; } catch(e) { console.error(`[notify] SMTP port ${cfg.port} failed:`, e.message); }
   }
-  throw new Error(`SMTP auth failed for ${process.env.EMAIL_USER} — check credentials in Hostinger panel`);
+  throw new Error(`SMTP auth failed for ${process.env.EMAIL_USER} — check EMAIL_HOST, EMAIL_USER, EMAIL_PASS env vars`);
 }
 
 async function sendEmail({ name, email, course, sessionDate, sessionFormat, sessionTz, price, regId }) {
