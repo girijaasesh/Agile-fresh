@@ -236,9 +236,33 @@ export default function QuickRegisterClient() {
   const [couponApplied, setCouponApplied] = useState(null);
   const [couponError,   setCouponError]   = useState('');
   const [couponLoading, setCouponLoading] = useState(false);
+  const [liveSessions,  setLiveSessions]  = useState(UPCOMING);
+
+  // Fetch live sessions from DB on mount
+  useEffect(() => {
+    fetch('/api/sessions')
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const mapped = data.map(s => ({
+            certId:     s.code.toLowerCase(),
+            date:       s.session_date.split('T')[0],
+            tz:         s.timezone || 'EST',
+            format:     s.format,
+            earlyBird:  Number(s.early_bird_price),
+            price:      Number(s.price),
+            ebDeadline: '2099-12-31',
+            seats:      s.max_seats,
+            booked:     0,
+          }));
+          setLiveSessions(mapped);
+        }
+      })
+      .catch(() => {}); // keep hardcoded fallback on error
+  }, []);
 
   const cert     = useMemo(() => getCert(form.certId),     [form.certId]);
-  const sessions = useMemo(() => getSessions(form.certId), [form.certId]);
+  const sessions = useMemo(() => liveSessions.filter(s => s.certId === form.certId), [liveSessions, form.certId]);
   const session  = useMemo(() => sessions[parseInt(form.sessionIdx, 10)] ?? null, [sessions, form.sessionIdx]);
   const eb       = session && isEarlyBird(session.ebDeadline);
   const basePrice = session ? (eb ? session.earlyBird : session.price) : cert?.earlyBird ?? 0;
