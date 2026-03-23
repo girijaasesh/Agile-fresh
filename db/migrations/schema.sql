@@ -77,3 +77,9 @@ INSERT INTO certifications (id, title, code, price, early_bird_price) VALUES
   (gen_random_uuid(), 'SAFe Release Train Engineer', 'RTE',  1295, 1095),
   (gen_random_uuid(), 'SAFe Program Consultant',     'SPC',  3995, 3495)
 ON CONFLICT (code) DO NOTHING;
+
+-- Seed coupon codes
+INSERT INTO coupons (code, discount_type, discount_value, is_active) VALUES
+  ('AGILIST50',    'fixed', 50, true),
+  ('SCRUMMASTER50','fixed', 50, true)
+ON CONFLICT (code) DO NOTHING;

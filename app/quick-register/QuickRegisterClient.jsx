@@ -5,9 +5,11 @@ import dynamic from 'next/dynamic';
 const PaymentForm = dynamic(() => import('../../components/PaymentForm'), { ssr: false });
 
 // ─── Brand data (mirrors AgileEdgeMVP) ───────────────────────────────────────
+const COUPON_COURSES = ['sa', 'ssm']; // courses that show coupon field
+
 const CERTIFICATIONS = [
-  { id: 'sa',     code: 'SA',   title: 'SAFe Agilist',               role: 'Leadership',    price: 995,  earlyBird: 795,  duration: '2 Days', desc: 'Foundation certification for enterprise agile leaders. Lean-Agile mindset and enterprise-scale transformation.' },
-  { id: 'ssm',    code: 'SSM',  title: 'SAFe Scrum Master',          role: 'Scrum Master',  price: 895,  earlyBird: 695,  duration: '2 Days', desc: 'Become a skilled Scrum Master in a SAFe enterprise environment. Facilitation, coaching, servant leadership.' },
+  { id: 'sa',     code: 'SA',   title: 'SAFe Agilist',               role: 'Leadership',    price: 995,  earlyBird: 400,  duration: '2 Days', desc: 'Foundation certification for enterprise agile leaders. Lean-Agile mindset and enterprise-scale transformation.' },
+  { id: 'ssm',    code: 'SSM',  title: 'SAFe Scrum Master',          role: 'Scrum Master',  price: 895,  earlyBird: 350,  duration: '2 Days', desc: 'Become a skilled Scrum Master in a SAFe enterprise environment. Facilitation, coaching, servant leadership.' },
   { id: 'sasm',   code: 'SASM', title: 'SAFe Advanced Scrum Master', role: 'Scrum Master',  price: 1095, earlyBird: 895,  duration: '2 Days', desc: 'Advanced coaching techniques. Master patterns, anti-patterns, and ART-level coaching.' },
   { id: 'popm',   code: 'POPM', title: 'SAFe Product Owner/PM',      role: 'Product Owner', price: 995,  earlyBird: 795,  duration: '2 Days', desc: 'Master product ownership at scale. Vision, roadmaps, backlog prioritisation at enterprise scale.' },
   { id: 'devops', code: 'SDP',  title: 'SAFe DevOps',                role: 'Technical',     price: 995,  earlyBird: 795,  duration: '2 Days', desc: 'Implement DevOps and continuous delivery pipelines in SAFe. Accelerate value delivery through technical excellence.' },
@@ -16,8 +18,8 @@ const CERTIFICATIONS = [
 ];
 
 const UPCOMING = [
-  { certId: 'sa',     date: '2026-03-15', tz: 'EST', format: 'Virtual',            earlyBird: 795,  price: 995,  ebDeadline: '2026-03-01', seats: 20, booked: 13 },
-  { certId: 'ssm',    date: '2026-03-22', tz: 'EST', format: 'Virtual',            earlyBird: 695,  price: 895,  ebDeadline: '2026-03-08', seats: 20, booked: 8  },
+  { certId: 'sa',     date: '2026-04-19', tz: 'EST', format: 'Virtual',            earlyBird: 400,  price: 995,  ebDeadline: '2026-04-30', seats: 20, booked: 13 },
+  { certId: 'ssm',    date: '2026-04-26', tz: 'EST', format: 'Virtual',            earlyBird: 350,  price: 895,  ebDeadline: '2026-04-30', seats: 20, booked: 8  },
   { certId: 'popm',   date: '2026-04-05', tz: 'PST', format: 'In-Person, Chicago', earlyBird: 795,  price: 995,  ebDeadline: '2026-03-22', seats: 20, booked: 11 },
   { certId: 'rte',    date: '2026-04-12', tz: 'EST', format: 'Virtual',            earlyBird: 1095, price: 1295, ebDeadline: '2026-03-29', seats: 12, booked: 9  },
   { certId: 'spc',    date: '2026-04-28', tz: 'CST', format: 'In-Person, Chicago', earlyBird: 3495, price: 3995, ebDeadline: '2026-04-14', seats: 10, booked: 8  },
@@ -224,18 +226,40 @@ export default function QuickRegisterClient() {
   const [form, setForm] = useState({
     name: '', email: '', phone: '', certId: '', sessionIdx: '', company: '', corpSize: '', isCorporate: false,
   });
-  const [errors,     setErrors]     = useState({});
-  const [touched,    setTouched]    = useState({});
-  const [phase,      setPhase]      = useState('form');
-  const [submitting, setSubmitting] = useState(false);
-  const [regId,      setRegId]      = useState(null);
-  const [apiError,   setApiError]   = useState('');
+  const [errors,        setErrors]        = useState({});
+  const [touched,       setTouched]       = useState({});
+  const [phase,         setPhase]         = useState('form');
+  const [submitting,    setSubmitting]    = useState(false);
+  const [regId,         setRegId]         = useState(null);
+  const [apiError,      setApiError]      = useState('');
+  const [couponCode,    setCouponCode]    = useState('');
+  const [couponApplied, setCouponApplied] = useState(null);
+  const [couponError,   setCouponError]   = useState('');
+  const [couponLoading, setCouponLoading] = useState(false);
 
   const cert     = useMemo(() => getCert(form.certId),     [form.certId]);
   const sessions = useMemo(() => getSessions(form.certId), [form.certId]);
   const session  = useMemo(() => sessions[parseInt(form.sessionIdx, 10)] ?? null, [sessions, form.sessionIdx]);
   const eb       = session && isEarlyBird(session.ebDeadline);
-  const price    = session ? (eb ? session.earlyBird : session.price) : cert?.earlyBird ?? 0;
+  const basePrice = session ? (eb ? session.earlyBird : session.price) : cert?.earlyBird ?? 0;
+  const couponDiscount = couponApplied ? (couponApplied.discount_type === 'fixed' ? couponApplied.discount_value : Math.round(basePrice * couponApplied.discount_value / 100)) : 0;
+  const price    = Math.max(0, basePrice - couponDiscount);
+
+  const showCoupon = COUPON_COURSES.includes(form.certId);
+
+  useEffect(() => { setCouponApplied(null); setCouponCode(''); setCouponError(''); }, [form.certId]);
+
+  const applyCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setCouponLoading(true); setCouponError('');
+    try {
+      const res  = await fetch('/api/coupon', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: couponCode.trim() }) });
+      const data = await res.json();
+      if (data.valid) { setCouponApplied(data.coupon); setCouponError(''); }
+      else            { setCouponApplied(null); setCouponError('Invalid or expired coupon code.'); }
+    } catch { setCouponError('Could not verify coupon. Try again.'); }
+    finally  { setCouponLoading(false); }
+  };
 
   useEffect(() => {
     if (sessions.length === 1) setForm(f => ({ ...f, sessionIdx: '0' }));
@@ -286,6 +310,7 @@ export default function QuickRegisterClient() {
           job_title:   null,
           country:     null,
           session_id:  null,
+          coupon_code: couponApplied ? couponCode.trim().toUpperCase() : null,
           amount_paid: price || null,
           currency:    'USD',
         }),
@@ -388,7 +413,7 @@ export default function QuickRegisterClient() {
 
             <div ref={formRef}>
               <div className="qr-form-card">
-                {phase === 'form'    && <RegistrationForm form={form} set={set} blur={blur} fieldErr={fieldErr} cert={cert} sessions={sessions} session={session} price={price} eb={eb} seats={seats} urgency={urgency} submitting={submitting} apiError={apiError} onSubmit={handleSubmit} />}
+                {phase === 'form'    && <RegistrationForm form={form} set={set} blur={blur} fieldErr={fieldErr} cert={cert} sessions={sessions} session={session} price={price} basePrice={basePrice} couponDiscount={couponDiscount} eb={eb} seats={seats} urgency={urgency} submitting={submitting} apiError={apiError} onSubmit={handleSubmit} showCoupon={showCoupon} couponCode={couponCode} setCouponCode={setCouponCode} couponApplied={couponApplied} couponError={couponError} couponLoading={couponLoading} applyCoupon={applyCoupon} />}
                 {phase === 'payment' && <PaymentSection   form={form} cert={cert} session={session} price={price} regId={regId} onSuccess={handlePaymentSuccess} />}
               </div>
             </div>
@@ -510,7 +535,7 @@ export default function QuickRegisterClient() {
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-function RegistrationForm({ form, set, blur, fieldErr, cert, sessions, session, price, eb, seats, urgency, submitting, apiError, onSubmit }) {
+function RegistrationForm({ form, set, blur, fieldErr, cert, sessions, session, price, basePrice, couponDiscount, eb, seats, urgency, submitting, apiError, onSubmit, showCoupon, couponCode, setCouponCode, couponApplied, couponError, couponLoading, applyCoupon }) {
   return (
     <form onSubmit={onSubmit} noValidate>
       <div className="qr-form-title">Quick Registration</div>
@@ -606,13 +631,42 @@ function RegistrationForm({ form, set, blur, fieldErr, cert, sessions, session, 
         </div>
       )}
 
-      {cert && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', background: 'var(--navy)', borderRadius: 10, marginBottom: 16, color: 'white' }}>
-          <div>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,.5)', marginBottom: 2 }}>{cert.title}</div>
-            {eb && <div style={{ fontSize: 11, color: 'var(--success)' }}>⚡ Early bird applied</div>}
+      {showCoupon && (
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--navy)', marginBottom: 6 }}>Have a coupon code?</div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <input
+              className="qr-input"
+              placeholder="Enter code"
+              value={couponCode}
+              onChange={e => setCouponCode(e.target.value.toUpperCase())}
+              onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), applyCoupon())}
+              style={{ flex: 1, marginBottom: 0 }}
+              disabled={!!couponApplied}
+            />
+            <button type="button" onClick={applyCoupon} disabled={couponLoading || !!couponApplied}
+              style={{ padding: '0 16px', background: couponApplied ? 'var(--success)' : 'var(--gold)', color: couponApplied ? 'white' : 'var(--navy)', border: 'none', borderRadius: 8, fontWeight: 700, fontSize: 13, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+              {couponLoading ? '…' : couponApplied ? '✓ Applied' : 'Apply'}
+            </button>
           </div>
-          <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 24, color: 'var(--gold)' }}>${price.toLocaleString('en-US')}</div>
+          {couponApplied && <div style={{ fontSize: 12, color: 'var(--success)', marginTop: 4 }}>✓ ${couponApplied.discount_value} off applied!</div>}
+          {couponError  && <div style={{ fontSize: 12, color: 'var(--danger)',  marginTop: 4 }}>{couponError}</div>}
+        </div>
+      )}
+
+      {cert && (
+        <div style={{ padding: '12px 14px', background: 'var(--navy)', borderRadius: 10, marginBottom: 16, color: 'white' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,.5)', marginBottom: 2 }}>{cert.title}</div>
+              {eb && <div style={{ fontSize: 11, color: 'var(--success)' }}>⚡ Special rate applied</div>}
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              {couponDiscount > 0 && <div style={{ fontSize: 12, color: 'rgba(255,255,255,.4)', textDecoration: 'line-through' }}>${basePrice.toLocaleString('en-US')}</div>}
+              <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 24, color: 'var(--gold)' }}>${price.toLocaleString('en-US')}</div>
+              {couponDiscount > 0 && <div style={{ fontSize: 11, color: 'var(--success)' }}>-${couponDiscount} coupon</div>}
+            </div>
+          </div>
         </div>
       )}
 
