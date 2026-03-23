@@ -1,20 +1,19 @@
 import SessionsClient from './SessionsClient';
 import { verifyAdminAuth } from '../../../lib/adminAuth';
+const { pool } = require('../../../lib/db');
 
 export default async function SessionsPage() {
   await verifyAdminAuth();
 
-  // Fetch sessions from database
   let sessions = [];
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/sessions`, {
-      cache: 'no-store'
-    });
-    if (response.ok) {
-      sessions = await response.json();
-    } else {
-      console.error('Failed to fetch sessions:', response.statusText);
-    }
+    const result = await pool.query(`
+      SELECT s.id, s.certification_id, c.title as course_title, c.code, s.session_date, s.format, s.max_seats, s.is_active, c.price, c.early_bird_price, s.timezone
+      FROM sessions s
+      JOIN certifications c ON s.certification_id = c.id
+      ORDER BY s.session_date ASC
+    `);
+    sessions = result.rows;
   } catch (error) {
     console.error('Error fetching sessions:', error);
   }
