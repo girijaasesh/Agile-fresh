@@ -22,10 +22,6 @@ export async function POST(req) {
     currency    = 'USD',
   } = body;
 
-  if (!process.env.DATABASE_URL) {
-    return Response.json({ error: 'DATABASE_URL is not set on this deployment' }, { status: 500 });
-  }
-
   if (!full_name?.trim()) return Response.json({ error: 'Full name is required' }, { status: 400 });
   if (!email?.trim())     return Response.json({ error: 'Email is required' },      { status: 400 });
 
@@ -53,6 +49,6 @@ export async function POST(req) {
 
   } catch (err) {
     console.error('[register] DB error:', err.message, err.code);
-    return Response.json({ error: err.message, code: err.code }, { status: 500 });
+    return Response.json({ error: 'Registration failed. Please try again.' }, { status: 500 });
   }
 }
