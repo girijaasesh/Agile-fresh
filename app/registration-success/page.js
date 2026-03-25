@@ -180,7 +180,7 @@ export default function RegistrationSuccessPage() {
           {/* Support note */}
           <p style={{ textAlign:'center', fontSize:13, color:'#94A3B8' }}>
             Need help?{' '}
-            <a href="mailto:training@agile.optim-soln.com" style={{ color:'#C9A84C', textDecoration:'none', fontWeight:600 }}>training@agile.optim-soln.com</a>
+            <a href="mailto:training@optim-soln.com" style={{ color:'#C9A84C', textDecoration:'none', fontWeight:600 }}>training@optim-soln.com</a>
           </p>
 
         </div>

@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(node -e \":*)"
+      "Bash(node -e \":*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"Remove 7-day refund mention from all pages:*)",
+      "Bash(git push:*)"
     ]
   }
 }

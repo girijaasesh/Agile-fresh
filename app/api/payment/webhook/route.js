@@ -44,7 +44,7 @@ async function sendConfirmationEmail(data) {
       + '<p style="color:#475569;font-size:14px;">For questions, contact us at ' + process.env.EMAIL_USER + '</p>'
       + '</div>'
       + '<div style="background:#F8FAFC;padding:16px;text-align:center;border-top:1px solid #E2E8F0;">'
-      + '<p style="color:#94A3B8;font-size:12px;margin:0;">AgileEdge Training | agile.optim-soln.com</p>'
+      + '<p style="color:#94A3B8;font-size:12px;margin:0;">AgileEdge Training | optim-soln.com</p>'
       + '</div>'
       + '</div>',
   });

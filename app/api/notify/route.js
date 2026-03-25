@@ -94,7 +94,7 @@ async function sendEmail({ name, email, course, sessionDate, sessionFormat, sess
             <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
               <tr>
                 <td align="center">
-                  <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://agile.optim-soln.com'}/quick-register"
+                  <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://optim-soln.com'}/quick-register"
                      style="display:inline-block;background:#C9A84C;color:#0B1629;text-decoration:none;font-weight:700;font-size:16px;padding:14px 40px;border-radius:8px;">
                     Complete Payment →
                   </a>
@@ -124,7 +124,7 @@ async function sendEmail({ name, email, course, sessionDate, sessionFormat, sess
         <tr>
           <td style="background:#F8FAFC;padding:20px 40px;text-align:center;border-top:1px solid #E2E8F0;">
             <p style="font-size:12px;color:#94A3B8;margin:0;">
-              AgileEdge Training · <a href="https://agile.optim-soln.com" style="color:#C9A84C;text-decoration:none;">agile.optim-soln.com</a>
+              AgileEdge Training · <a href="https://optim-soln.com" style="color:#C9A84C;text-decoration:none;">optim-soln.com</a>
             </p>
             <p style="font-size:11px;color:#CBD5E1;margin:6px 0 0;">You're receiving this because you registered for a course. Ref: ${regId || '—'}</p>
           </td>
