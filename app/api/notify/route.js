@@ -160,8 +160,15 @@ export async function POST(req) {
     return Response.json({ error: 'name and email are required' }, { status: 400 });
   }
 
+  // Log env var presence to help debug missing config
+  console.log('[notify] EMAIL_HOST:', process.env.EMAIL_HOST || '(not set)');
+  console.log('[notify] EMAIL_USER:', process.env.EMAIL_USER || '(not set)');
+  console.log('[notify] EMAIL_PASS:', process.env.EMAIL_PASS ? '(set)' : '(not set)');
+  console.log('[notify] Sending to:', email, '| course:', course);
+
   try {
     await sendEmail({ name, email, course, sessionDate, sessionFormat, sessionTz, price, regId });
+    console.log('[notify] Email sent successfully to:', email);
     return Response.json({ email: true }, { status: 200 });
   } catch (err) {
     console.error('[notify] Email failed:', err.message);
