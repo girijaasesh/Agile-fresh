@@ -10,60 +10,66 @@ import { loadStripe } from '@stripe/stripe-js';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
 
-function CheckoutForm({ amount, currency, name, email, courseTitle, onSuccess }) {
+function CheckoutForm({ amount, currency, onSuccess }) {
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
+  const [ready, setReady] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async () => {
-    if (!stripe || !elements) return;
+    if (!stripe || !elements) {
+      setError('Payment is still loading. Please wait a moment and try again.');
+      return;
+    }
     setLoading(true);
     setError('');
 
-    const { error: submitError } = await elements.submit();
-    if (submitError) {
-      setError(submitError.message);
-      setLoading(false);
-      return;
-    }
-
-    const { error: confirmError } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/registration-success`,
-        payment_method_data: {
-          billing_details: { name, email }
-        }
-      },
-      redirect: 'if_required',
-    });
-
-    if (confirmError) {
-      setError(confirmError.message);
-      setLoading(false);
-    } else {
-      try {
-        await fetch('/api/email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, name, courseTitle }),
-        });
-      } catch (e) {
-        console.error('Email send failed:', e);
+    try {
+      const { error: submitError } = await elements.submit();
+      if (submitError) {
+        setError(submitError.message);
+        setLoading(false);
+        return;
       }
-      onSuccess();
+
+      const { error: confirmError } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/registration-success`,
+        },
+        redirect: 'if_required',
+      });
+
+      if (confirmError) {
+        setError(confirmError.message);
+        setLoading(false);
+      } else {
+        onSuccess();
+      }
+    } catch (err) {
+      setError('Payment failed. Please try again.');
+      setLoading(false);
     }
   };
 
   return (
     <div>
-      <PaymentElement options={{
-        layout: 'tabs',
-        wallets: { applePay: 'never', googlePay: 'never' },
-        terms: { card: 'never' },
-        fields: { billingDetails: { name: 'never', email: 'never' } }
-      }} />
+      {!ready && (
+        <div style={{ textAlign: 'center', padding: '20px 0', color: '#94A3B8', fontSize: 14 }}>
+          Loading payment form…
+        </div>
+      )}
+      <div style={{ display: ready ? 'block' : 'none' }}>
+        <PaymentElement
+          onReady={() => setReady(true)}
+          options={{
+            layout: 'tabs',
+            wallets: { applePay: 'auto', googlePay: 'auto' },
+            terms: { card: 'never' },
+          }}
+        />
+      </div>
       {error && (
         <div style={{ background: '#FEE2E2', color: '#991B1B', padding: '12px', borderRadius: '8px', marginTop: '16px', fontSize: '14px' }}>
           {error}
@@ -71,11 +77,14 @@ function CheckoutForm({ amount, currency, name, email, courseTitle, onSuccess })
       )}
       <button
         onClick={handleSubmit}
-        disabled={loading || !stripe}
-        style={{ width: '100%', padding: '14px', background: loading ? '#9CA3AF' : '#0B1629', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold', cursor: loading ? 'not-allowed' : 'pointer', marginTop: '24px' }}
+        disabled={loading || !ready}
+        style={{ width: '100%', padding: '14px', background: (loading || !ready) ? '#9CA3AF' : '#0B1629', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold', cursor: (loading || !ready) ? 'not-allowed' : 'pointer', marginTop: '20px' }}
       >
-        {loading ? 'Processing...' : `Pay ${currency} ${amount}`}
+        {loading ? 'Processing payment…' : `Pay ${currency} ${amount}`}
       </button>
+      <p style={{ marginTop: '10px', fontSize: '12px', color: '#9CA3AF', textAlign: 'center' }}>
+        🔒 256-bit SSL encrypted · Powered by Stripe
+      </p>
     </div>
   );
 }
@@ -89,6 +98,13 @@ export default function PaymentForm({ amount, currency, name, email, courseTitle
     setClientSecret('');
     setError('');
   }, [email, courseTitle]);
+
+  // Auto-initialize payment on mount
+  useEffect(() => {
+    if (!clientSecret && !loading && !error) {
+      initializePayment();
+    }
+  }, []);
 
   const initializePayment = async () => {
     setLoading(true);
@@ -106,7 +122,7 @@ export default function PaymentForm({ amount, currency, name, email, courseTitle
         setClientSecret(data.clientSecret);
       }
     } catch (err) {
-      setError('Failed to initialize payment. Please try again.');
+      setError('Failed to connect to payment service. Please try again.');
     }
     setLoading(false);
   };
@@ -114,27 +130,24 @@ export default function PaymentForm({ amount, currency, name, email, courseTitle
   if (!clientSecret) {
     return (
       <div style={{ textAlign: 'center', padding: '24px' }}>
-        <p style={{ marginBottom: '16px', color: '#374151' }}>
-          Course: <strong>{courseTitle}</strong>
-        </p>
-        <p style={{ marginBottom: '8px', color: '#374151' }}>
-          Registering as: <strong>{name}</strong> ({email})
-        </p>
-        <p style={{ marginBottom: '24px', fontSize: '24px', fontWeight: 'bold', color: '#0B1629' }}>
-          {currency} {amount}
-        </p>
-        {error && (
-          <div style={{ background: '#FEE2E2', color: '#991B1B', padding: '12px', borderRadius: '8px', marginBottom: '16px', fontSize: '14px' }}>
-            {error}
+        {loading ? (
+          <div>
+            <div style={{ width: 32, height: 32, border: '3px solid #E2E8F0', borderTopColor: '#0B1629', borderRadius: '50%', animation: 'spin 0.7s linear infinite', margin: '0 auto 12px' }} />
+            <p style={{ color: '#64748B', fontSize: 14 }}>Preparing secure payment…</p>
           </div>
-        )}
-        <button
-          onClick={initializePayment}
-          disabled={loading}
-          style={{ width: '100%', padding: '14px', background: loading ? '#9CA3AF' : '#0B1629', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold', cursor: loading ? 'not-allowed' : 'pointer' }}
-        >
-          {loading ? 'Loading...' : 'Proceed to Payment'}
-        </button>
+        ) : error ? (
+          <div>
+            <div style={{ background: '#FEE2E2', color: '#991B1B', padding: '12px', borderRadius: '8px', marginBottom: '16px', fontSize: '14px' }}>
+              {error}
+            </div>
+            <button
+              onClick={initializePayment}
+              style={{ padding: '12px 28px', background: '#0B1629', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '15px', fontWeight: 'bold', cursor: 'pointer' }}
+            >
+              Try Again
+            </button>
+          </div>
+        ) : null}
         <p style={{ marginTop: '12px', fontSize: '12px', color: '#9CA3AF' }}>
           🔒 256-bit SSL encrypted · Powered by Stripe
         </p>
@@ -145,7 +158,7 @@ export default function PaymentForm({ amount, currency, name, email, courseTitle
   return (
     <Elements
       stripe={stripePromise}
-      options={{ clientSecret, loader: 'auto' }}
+      options={{ clientSecret, loader: 'auto', appearance: { theme: 'stripe' } }}
       key={clientSecret}
     >
       <CheckoutForm
