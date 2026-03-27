@@ -60,18 +60,18 @@ const CSS = `
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
 
   :root {
-    --navy:       #0B1629;
-    --navy-mid:   #162240;
-    --navy-light: #1E3054;
+    --navy:       #1E3A5F;
+    --navy-mid:   #2D5480;
+    --navy-light: #4A7AB5;
     --gold:       #C9A84C;
     --gold-light: #E8C97A;
-    --gold-pale:  #F5EDD6;
-    --cream:      #FAFAF7;
-    --slate:      #64748B;
-    --slate-lt:   #94A3B8;
+    --gold-pale:  #FDF6E3;
+    --cream:      #F5F8FF;
+    --slate:      #5A7898;
+    --slate-lt:   #8BA6C4;
     --success:    #10B981;
     --danger:     #EF4444;
-    --border:     rgba(201,168,76,0.2);
+    --border:     #D1DCF0;
     --white:      #FFFFFF;
   }
 
@@ -93,35 +93,35 @@ const CSS = `
   .qr-wrap  { max-width:1200px; margin:0 auto; padding:0 20px; }
   .qr-grid  { display:grid; grid-template-columns:1fr 420px; gap:40px; align-items:start; }
 
-  .qr-nav { position:fixed; top:0; left:0; right:0; z-index:200; background:rgba(11,22,41,.97); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); height:60px; display:flex; align-items:center; }
+  .qr-nav { position:fixed; top:0; left:0; right:0; z-index:200; background:rgba(255,255,255,0.97); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); height:60px; display:flex; align-items:center; }
   .qr-nav-inner { display:flex; align-items:center; justify-content:space-between; width:100%; max-width:1200px; margin:0 auto; padding:0 20px; }
   .qr-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
   .qr-logo-mark { width:34px; height:34px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); border-radius:7px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; color:var(--navy); }
-  .qr-logo-text { font-family:'Playfair Display',serif; font-size:18px; color:white; }
+  .qr-logo-text { font-family:'Playfair Display',serif; font-size:18px; color:var(--navy); }
   .qr-nav-right { display:flex; align-items:center; gap:12px; }
 
   .btn { display:inline-flex; align-items:center; gap:8px; padding:11px 24px; border-radius:7px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; transition:all .2s; border:none; text-decoration:none; white-space:nowrap; }
   .btn-gold { background:var(--gold); color:var(--navy); }
   .btn-gold:hover { background:var(--gold-light); transform:translateY(-1px); box-shadow:0 8px 24px rgba(201,168,76,.3); }
   .btn-gold:disabled { background:#CBD5E1; color:#94A3B8; cursor:not-allowed; transform:none; box-shadow:none; }
-  .btn-outline { background:transparent; color:white; border:1.5px solid rgba(255,255,255,.35); }
+  .btn-outline { background:transparent; color:var(--navy); border:1.5px solid var(--border); }
   .btn-outline:hover { border-color:var(--gold); color:var(--gold); }
-  .btn-ghost-navy { background:transparent; color:rgba(255,255,255,.6); font-size:13px; padding:8px 12px; }
-  .btn-ghost-navy:hover { color:white; }
+  .btn-ghost-navy { background:transparent; color:var(--slate); font-size:13px; padding:8px 12px; }
+  .btn-ghost-navy:hover { color:var(--navy); }
   .btn-lg { padding:15px 32px; font-size:16px; border-radius:8px; }
   .btn-full { width:100%; justify-content:center; }
 
-  .qr-hero { background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 55%,#0D1F3C 100%); padding:100px 0 60px; position:relative; overflow:hidden; }
-  .qr-hero-grid { position:absolute; inset:0; background-image:linear-gradient(rgba(201,168,76,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.04) 1px,transparent 1px); background-size:60px 60px; pointer-events:none; }
-  .qr-hero-glow { position:absolute; top:10%; left:50%; width:600px; height:600px; background:radial-gradient(circle,rgba(201,168,76,.05) 0%,transparent 70%); pointer-events:none; }
-  .qr-eyebrow { display:inline-flex; align-items:center; gap:8px; background:rgba(201,168,76,.1); border:1px solid var(--border); border-radius:20px; padding:5px 14px; font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:18px; }
-  .qr-hero-title { font-family:'Playfair Display',serif; font-size:clamp(30px,4.5vw,56px); color:white; line-height:1.12; margin-bottom:18px; }
+  .qr-hero { background:linear-gradient(135deg,#EBF2FF 0%,#E6EEFF 55%,#EEF4FF 100%); padding:100px 0 60px; position:relative; overflow:hidden; }
+  .qr-hero-grid { position:absolute; inset:0; background-image:linear-gradient(rgba(30,58,95,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,95,.04) 1px,transparent 1px); background-size:60px 60px; pointer-events:none; }
+  .qr-hero-glow { position:absolute; top:10%; left:50%; width:600px; height:600px; background:radial-gradient(circle,rgba(201,168,76,.08) 0%,transparent 70%); pointer-events:none; }
+  .qr-eyebrow { display:inline-flex; align-items:center; gap:8px; background:rgba(201,168,76,.12); border:1px solid rgba(201,168,76,.3); border-radius:20px; padding:5px 14px; font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:#8B6914; margin-bottom:18px; }
+  .qr-hero-title { font-family:'Playfair Display',serif; font-size:clamp(30px,4.5vw,56px); color:var(--navy); line-height:1.12; margin-bottom:18px; }
   .qr-hero-title em { color:var(--gold); font-style:normal; }
-  .qr-hero-sub { font-size:17px; color:rgba(255,255,255,.65); line-height:1.7; margin-bottom:28px; max-width:500px; }
-  .qr-trust-row { display:flex; flex-wrap:wrap; gap:20px; margin-top:32px; padding-top:28px; border-top:1px solid rgba(255,255,255,.1); }
+  .qr-hero-sub { font-size:17px; color:var(--slate); line-height:1.7; margin-bottom:28px; max-width:500px; }
+  .qr-trust-row { display:flex; flex-wrap:wrap; gap:20px; margin-top:32px; padding-top:28px; border-top:1px solid rgba(30,58,95,.12); }
   .qr-trust-stat { }
   .qr-trust-num { font-family:'Playfair Display',serif; font-size:26px; color:var(--gold); }
-  .qr-trust-lbl { font-size:12px; color:rgba(255,255,255,.5); margin-top:2px; }
+  .qr-trust-lbl { font-size:12px; color:var(--slate-lt); margin-top:2px; }
 
   .qr-form-card { background:white; border-radius:16px; padding:32px; box-shadow:0 24px 64px rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.1); position:sticky; top:72px; }
   .qr-form-title { font-family:'Playfair Display',serif; font-size:20px; color:var(--navy); margin-bottom:4px; }
@@ -147,8 +147,8 @@ const CSS = `
   .qr-section { padding:60px 0; }
   .qr-section-alt { background:white; }
   .qr-highlights { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:20px; margin-top:32px; }
-  .qr-highlight { display:flex; align-items:flex-start; gap:14px; padding:20px; background:var(--cream); border-radius:12px; border:1px solid rgba(0,0,0,.05); }
-  .qr-highlight-icon { width:42px; height:42px; background:linear-gradient(135deg,var(--navy),var(--navy-mid)); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+  .qr-highlight { display:flex; align-items:flex-start; gap:14px; padding:20px; background:white; border-radius:12px; border:1px solid var(--border); }
+  .qr-highlight-icon { width:42px; height:42px; background:linear-gradient(135deg,#DBE8FF,#C8DBFF); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
   .qr-highlight-title { font-size:14px; font-weight:600; color:var(--navy); margin-bottom:3px; }
   .qr-highlight-desc  { font-size:13px; color:var(--slate); line-height:1.5; }
 
@@ -166,12 +166,12 @@ const CSS = `
   .qr-price-btn   { margin-top:16px; width:100%; }
 
   .qr-testimonials { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; margin-top:32px; }
-  .qr-testimonial  { background:var(--navy); border-radius:14px; padding:24px; }
+  .qr-testimonial  { background:white; border:1px solid var(--border); border-radius:14px; padding:24px; box-shadow:0 2px 12px rgba(30,58,95,.06); }
   .qr-test-stars   { color:var(--gold); font-size:14px; margin-bottom:12px; letter-spacing:2px; }
-  .qr-test-text    { font-size:14px; color:rgba(255,255,255,.8); line-height:1.7; margin-bottom:16px; font-style:italic; }
-  .qr-test-name    { font-size:14px; font-weight:600; color:white; }
-  .qr-test-role    { font-size:12px; color:rgba(255,255,255,.45); margin-top:2px; }
-  .qr-test-cert    { display:inline-block; margin-top:10px; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--gold); background:rgba(201,168,76,.1); border:1px solid rgba(201,168,76,.3); border-radius:20px; padding:3px 10px; }
+  .qr-test-text    { font-size:14px; color:var(--slate); line-height:1.7; margin-bottom:16px; font-style:italic; }
+  .qr-test-name    { font-size:14px; font-weight:600; color:var(--navy); }
+  .qr-test-role    { font-size:12px; color:var(--slate-lt); margin-top:2px; }
+  .qr-test-cert    { display:inline-block; margin-top:10px; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#8B6914; background:rgba(201,168,76,.1); border:1px solid rgba(201,168,76,.3); border-radius:20px; padding:3px 10px; }
 
   .qr-success { text-align:center; padding:40px 20px; animation:fadeIn .5s ease; }
   .qr-success-icon { font-size:64px; margin-bottom:16px; animation:tick .5s .2s both cubic-bezier(.34,1.56,.64,1); display:block; }
@@ -181,7 +181,7 @@ const CSS = `
   .qr-next-steps h4 { font-size:14px; font-weight:700; color:var(--navy); margin-bottom:12px; }
   .qr-next-step     { display:flex; align-items:flex-start; gap:10px; font-size:13px; color:var(--slate); margin-bottom:8px; line-height:1.5; }
 
-  .qr-sticky-bar { display:none; position:fixed; bottom:0; left:0; right:0; z-index:150; background:var(--navy); padding:12px 20px; border-top:1px solid var(--border); }
+  .qr-sticky-bar { display:none; position:fixed; bottom:0; left:0; right:0; z-index:150; background:white; padding:12px 20px; border-top:1px solid var(--border); box-shadow:0 -4px 16px rgba(30,58,95,.08); }
 
   .qr-toggle-wrap { display:flex; align-items:center; gap:10px; padding:12px; background:#F8FAFC; border-radius:8px; margin-bottom:16px; border:1px solid #E2E8F0; cursor:pointer; }
   .qr-toggle { position:relative; width:38px; height:22px; flex-shrink:0; }
@@ -197,9 +197,9 @@ const CSS = `
 
   .qr-lbl { font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:10px; }
   .qr-sec-title { font-family:'Playfair Display',serif; font-size:clamp(24px,3.5vw,36px); color:var(--navy); line-height:1.2; }
-  .qr-sec-title.light { color:white; }
+  .qr-sec-title.light { color:var(--navy); }
   .qr-sec-sub { font-size:16px; color:var(--slate); margin-top:10px; line-height:1.6; }
-  .qr-sec-sub.light { color:rgba(255,255,255,.6); }
+  .qr-sec-sub.light { color:var(--slate); }
 
   .qr-spinner { width:20px; height:20px; border:3px solid rgba(11,22,41,.2); border-top-color:var(--navy); border-radius:50%; animation:spin .7s linear infinite; }
 
@@ -527,7 +527,7 @@ export default function QuickRegisterClient() {
         </div>
       </section>
 
-      <section className="qr-section" style={{ background: 'var(--navy)' }}>
+      <section className="qr-section" style={{ background: '#EEF5FF' }}>
         <div className="qr-wrap">
           <div className="qr-lbl">Social Proof</div>
           <h2 className="qr-sec-title light">Trusted by enterprise agile leaders</h2>
@@ -557,13 +557,50 @@ export default function QuickRegisterClient() {
         </div>
       </section>
 
-      <div style={{ background: 'var(--navy)', padding: '20px', textAlign: 'center' }}>
-        <a href="/" style={{ color: 'rgba(255,255,255,.4)', fontSize: 12, textDecoration: 'none' }}>
-          ← Back to AgileEdge main site
-        </a>
-        <span style={{ color: 'rgba(255,255,255,.15)', margin: '0 12px' }}>|</span>
-        <span style={{ color: 'rgba(255,255,255,.4)', fontSize: 12 }}>© 2026 AgileEdge · All rights reserved</span>
-      </div>
+      <footer style={{ background: '#EEF2F8', color: 'var(--slate)' }}>
+        <div className="qr-wrap" style={{ padding: '60px 20px 40px', borderBottom: '1px solid var(--border)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 40 }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+                <div style={{ background: 'linear-gradient(135deg,#C9A84C,#E8C97A)', borderRadius: 8, width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 14, color: 'var(--navy)' }}>AE</div>
+                <span style={{ fontFamily: 'Playfair Display, serif', fontSize: 20, color: 'var(--navy)' }}>AgileEdge</span>
+              </div>
+              <p style={{ fontSize: 14, lineHeight: 1.7 }}>Transform at Scale — SAFe certified training for enterprise agile leaders.</p>
+              <p style={{ fontSize: 13, marginTop: 16 }}>SAFe Program Consultant (SPC 6.0)</p>
+            </div>
+            <div>
+              <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 15, color: 'var(--navy)', marginBottom: 16 }}>Certifications</div>
+              {['SAFe Agilist', 'SAFe Scrum Master', 'POPM', 'RTE', 'SPC'].map(c => (
+                <span key={c} style={{ display: 'block', fontSize: 14, color: 'var(--slate)', marginBottom: 8, cursor: 'pointer' }}>{c}</span>
+              ))}
+            </div>
+            <div>
+              <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 15, color: 'var(--navy)', marginBottom: 16 }}>Company</div>
+              {['About', 'Corporate Training', 'Blog', 'Case Studies', 'Contact'].map(c => (
+                <span key={c} style={{ display: 'block', fontSize: 14, color: 'var(--slate)', marginBottom: 8, cursor: 'pointer' }}>{c}</span>
+              ))}
+            </div>
+            <div>
+              <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 15, color: 'var(--navy)', marginBottom: 16 }}>Contact</div>
+              <p style={{ fontSize: 14, marginBottom: 8 }}>📧 training@optim-sol.com</p>
+              <p style={{ fontSize: 14, marginBottom: 16 }}>📍 Germantown, MD (Virtual & In-Person)</p>
+              <div style={{ display: 'flex', gap: 12 }}>
+                {['LinkedIn', 'Twitter', 'YouTube'].map(s => (
+                  <span key={s} style={{ fontSize: 13, color: 'var(--slate)', cursor: 'pointer', padding: '6px 10px', borderRadius: 6, border: '1px solid var(--border)' }}>{s}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="qr-wrap" style={{ padding: '20px', fontSize: 13, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+          <span>© 2026 AgileEdge. All rights reserved.</span>
+          <div style={{ display: 'flex', gap: 20 }}>
+            {['Privacy Policy', 'Terms of Service', 'Refund Policy'].map(l => (
+              <span key={l} style={{ color: 'var(--slate)', cursor: 'pointer' }}>{l}</span>
+            ))}
+          </div>
+        </div>
+      </footer>
 
       <div className="qr-sticky-bar">
         <button className="btn btn-gold btn-full btn-lg" onClick={scrollToForm} style={{ borderRadius: 10 }}>

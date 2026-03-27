@@ -16,19 +16,19 @@ const BRAND = {
 
 const COLORS = `
   :root {
-    --navy: #0B1629;
-    --navy-mid: #162240;
-    --navy-light: #1E3054;
+    --navy: #1E3A5F;
+    --navy-mid: #2D5480;
+    --navy-light: #4A7AB5;
     --gold: #C9A84C;
     --gold-light: #E8C97A;
-    --gold-pale: #F5EDD6;
-    --cream: #FAFAF7;
-    --slate: #64748B;
-    --slate-light: #94A3B8;
+    --gold-pale: #FDF6E3;
+    --cream: #F5F8FF;
+    --slate: #5A7898;
+    --slate-light: #8BA6C4;
     --white: #FFFFFF;
     --success: #10B981;
     --danger: #EF4444;
-    --border: rgba(201,168,76,0.2);
+    --border: #D1DCF0;
   }
 `;
 
@@ -96,7 +96,7 @@ const globalStyles = `
 
   /* Scrollbar */
   ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--navy); }
+  ::-webkit-scrollbar-track { background: #EEF2F8; }
   ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
 
   /* Sections */
@@ -111,7 +111,7 @@ const globalStyles = `
   .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; text-decoration: none; }
   .btn-primary { background: var(--gold); color: var(--navy); }
   .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(201,168,76,0.3); }
-  .btn-outline { background: transparent; color: var(--white); border: 1.5px solid rgba(255,255,255,0.4); }
+  .btn-outline { background: transparent; color: var(--navy); border: 1.5px solid var(--border); }
   .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
   .btn-outline-navy { background: transparent; color: var(--navy); border: 1.5px solid var(--navy); }
   .btn-outline-navy:hover { background: var(--navy); color: var(--white); }
@@ -148,26 +148,26 @@ const globalStyles = `
   .form-hint { font-size: 12px; color: var(--slate); margin-top: 4px; }
 
   /* Nav */
-  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(11,22,41,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(255,255,255,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
   .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 64px; max-width: 1280px; margin: 0 auto; }
   .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
   .nav-logo-mark { width: 36px; height: 36px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; color: var(--navy); }
-  .nav-logo-text { font-family: 'Playfair Display', serif; font-size: 20px; color: white; }
+  .nav-logo-text { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--navy); }
   .nav-links { display: flex; gap: 4px; }
-  .nav-link { padding: 8px 14px; border-radius: 6px; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); cursor: pointer; transition: all 0.2s; border: none; background: none; }
-  .nav-link:hover, .nav-link.active { color: white; background: rgba(255,255,255,0.08); }
+  .nav-link { padding: 8px 14px; border-radius: 6px; font-size: 14px; font-weight: 500; color: var(--slate); cursor: pointer; transition: all 0.2s; border: none; background: none; }
+  .nav-link:hover, .nav-link.active { color: var(--navy); background: rgba(30,58,95,0.06); }
 
   /* Hero */
-  .hero { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 50%, #0D1F3C 100%); min-height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; padding-top: 64px; }
-  .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px); background-size: 60px 60px; }
-  .hero-glow { position: absolute; top: 20%; right: 10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%); }
-  .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(201,168,76,0.1); border: 1px solid var(--border); border-radius: 20px; padding: 6px 16px; font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
-  .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(36px, 5.5vw, 72px); color: white; line-height: 1.1; margin-bottom: 24px; }
+  .hero { background: linear-gradient(135deg, #EBF2FF 0%, #E6EEFF 50%, #EEF4FF 100%); min-height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; padding-top: 64px; }
+  .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(30,58,95,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(30,58,95,0.04) 1px, transparent 1px); background-size: 60px 60px; }
+  .hero-glow { position: absolute; top: 20%; right: 10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(201,168,76,0.1) 0%, transparent 70%); }
+  .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.3); border-radius: 20px; padding: 6px 16px; font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #8B6914; margin-bottom: 24px; }
+  .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(36px, 5.5vw, 72px); color: var(--navy); line-height: 1.1; margin-bottom: 24px; }
   .hero-title em { color: var(--gold); font-style: normal; }
-  .hero-sub { font-size: 18px; color: rgba(255,255,255,0.65); line-height: 1.7; max-width: 520px; margin-bottom: 40px; }
-  .hero-stats { display: flex; gap: 40px; margin-top: 48px; padding-top: 40px; border-top: 1px solid var(--border); }
+  .hero-sub { font-size: 18px; color: var(--slate); line-height: 1.7; max-width: 520px; margin-bottom: 40px; }
+  .hero-stats { display: flex; gap: 40px; margin-top: 48px; padding-top: 40px; border-top: 1px solid rgba(30,58,95,0.12); }
   .hero-stat-num { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--gold); }
-  .hero-stat-label { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+  .hero-stat-label { font-size: 13px; color: var(--slate-light); margin-top: 2px; }
 
   /* Cert cards */
   .cert-card { background: white; border: 1px solid rgba(0,0,0,0.07); border-radius: 14px; padding: 28px; transition: all 0.25s; cursor: pointer; position: relative; overflow: hidden; }
@@ -239,7 +239,7 @@ const globalStyles = `
   .testi-stars { color: var(--gold); font-size: 14px; margin-bottom: 14px; }
   .testi-text { font-size: 15px; color: var(--navy-mid); line-height: 1.7; font-style: italic; margin-bottom: 20px; }
   .testi-author { display: flex; align-items: center; gap: 12px; }
-  .testi-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--navy), var(--navy-light)); display: flex; align-items: center; justify-content: center; color: var(--gold); font-weight: 700; font-size: 16px; flex-shrink: 0; }
+  .testi-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #DBE8FF, #C8DBFF); display: flex; align-items: center; justify-content: center; color: var(--navy); font-weight: 700; font-size: 16px; flex-shrink: 0; }
   .testi-name { font-weight: 600; font-size: 14px; }
   .testi-role { font-size: 12px; color: var(--slate); }
 
@@ -247,11 +247,11 @@ const globalStyles = `
   .toast { position: fixed; bottom: 24px; right: 24px; background: var(--navy); color: white; padding: 14px 24px; border-radius: 10px; font-size: 14px; font-weight: 500; border-left: 4px solid var(--gold); z-index: 999; animation: fadeUp 0.3s; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
 
   /* Footer */
-  .footer { background: var(--navy); color: rgba(255,255,255,0.6); }
+  .footer { background: #EEF2F8; color: var(--slate); }
   .footer-top { padding: 60px 0 40px; border-bottom: 1px solid var(--border); }
   .footer-bottom { padding: 20px 0; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
-  .footer-heading { font-family: 'Playfair Display', serif; font-size: 15px; color: white; margin-bottom: 16px; }
-  .footer-link { display: block; font-size: 14px; color: rgba(255,255,255,0.55); margin-bottom: 8px; cursor: pointer; transition: color 0.2s; }
+  .footer-heading { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--navy); margin-bottom: 16px; }
+  .footer-link { display: block; font-size: 14px; color: var(--slate); margin-bottom: 8px; cursor: pointer; transition: color 0.2s; }
   .footer-link:hover { color: var(--gold); }
 
   /* Misc utils */
@@ -423,8 +423,7 @@ const Footer = ({ setPage }) => (
           <div>
             <div className="footer-heading">Contact</div>
             <p style={{ fontSize: 14, marginBottom: 8 }}>📧 training@agile-edge.com</p>
-            <p style={{ fontSize: 14, marginBottom: 8 }}>📞 +1 (555) 867-5309</p>
-            <p style={{ fontSize: 14, marginBottom: 16 }}>📍 Chicago, IL (Virtual & In-Person)</p>
+            <p style={{ fontSize: 14, marginBottom: 16 }}>📍 Germantown, MD (Virtual & In-Person)</p>
             <div style={{ display: 'flex', gap: 12 }}>
               {['LinkedIn', 'Twitter', 'YouTube'].map(s => (
                 <span key={s} style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', cursor: 'pointer', padding: '6px 10px', borderRadius: 6, border: '1px solid rgba(255,255,255,0.1)' }}>{s}</span>
@@ -571,12 +570,12 @@ const HomePage = ({ setPage, currency, setCurrency, toast }) => {
                 ))}
               </div>
             </div>
-            <div style={{ background: 'linear-gradient(135deg, var(--navy), var(--navy-light))', borderRadius: 20, padding: 40, color: 'white', position: 'relative' }}>
+            <div style={{ background: 'linear-gradient(135deg, #DBE8FF, #C8DBFF)', borderRadius: 20, padding: 40, color: 'var(--navy)', position: 'relative', border: '1px solid var(--border)' }}>
               <div style={{ position: 'absolute', top: 20, right: 20 }}><span className="badge badge-gold">SPC 6.0</span></div>
               <div style={{ fontSize: 64, marginBottom: 16 }}>👤</div>
               <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 22, marginBottom: 8 }}>Dr. Michael Stern</div>
-              <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.65)', marginBottom: 24 }}>SAFe Program Consultant · Enterprise Coach</div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 24 }}>
+              <div style={{ fontSize: 14, color: 'var(--slate)', marginBottom: 24 }}>SAFe Program Consultant · Enterprise Coach</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, borderTop: '1px solid rgba(30,58,95,0.15)', paddingTop: 24 }}>
                 {[['10+', 'Years Experience'], ['500+', 'Professionals'], ['20+', 'ARTs Launched'], ['98%', 'Pass Rate']].map(([n, l]) => (
                   <div key={l}><div style={{ fontFamily: 'Playfair Display, serif', fontSize: 24, color: 'var(--gold)' }}>{n}</div><div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginTop: 2 }}>{l}</div></div>
                 ))}
@@ -632,21 +631,21 @@ const HomePage = ({ setPage, currency, setCurrency, toast }) => {
       </section>
 
       {/* Testimonials */}
-      <section className="section" style={{ background: 'var(--navy)' }}>
+      <section className="section" style={{ background: '#EEF5FF' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <div className="section-label">Client Success Stories</div>
-            <h2 className="section-title light">Trusted by Enterprise Leaders</h2>
+            <h2 className="section-title">Trusted by Enterprise Leaders</h2>
           </div>
           <div className="grid-3">
             {TESTIMONIALS.map((t, i) => (
-              <div key={i} className="testi-card" style={{ background: 'var(--navy-light)', border: '1px solid var(--border)' }}>
+              <div key={i} className="testi-card" style={{ background: 'white', border: '1px solid var(--border)' }}>
                 <div className="testi-stars">{'★'.repeat(t.rating)}</div>
-                <div className="testi-text" style={{ color: 'rgba(255,255,255,0.85)' }}>{t.text}</div>
+                <div className="testi-text">{t.text}</div>
                 <div className="testi-author">
                   <div className="testi-avatar">{t.name[0]}</div>
                   <div>
-                    <div className="testi-name" style={{ color: 'white' }}>{t.name}</div>
+                    <div className="testi-name">{t.name}</div>
                     <div style={{ marginTop: 4 }}><span className="badge badge-gold" style={{ fontSize: 10 }}>{t.cert}</span></div>
                   </div>
                 </div>
@@ -680,11 +679,11 @@ const CertificationsPage = ({ setPage, currency, setPreSelectedCert }) => {
 
   return (
     <div>
-      <div style={{ background: 'var(--navy)', padding: '120px 0 60px' }}>
+      <div style={{ background: 'linear-gradient(135deg,#EBF2FF 0%,#E6EEFF 100%)', padding: '120px 0 60px' }}>
         <div className="container">
           <div className="section-label">Our Programs</div>
-          <h1 className="section-title light" style={{ marginBottom: 12 }}>SAFe Certification Programs</h1>
-          <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 17, maxWidth: 520 }}>Choose from the complete SAFe curriculum. Every certification is delivered live by our SAFe SPC with enterprise coaching built in.</p>
+          <h1 className="section-title" style={{ marginBottom: 12 }}>SAFe Certification Programs</h1>
+          <p style={{ color: 'var(--slate)', fontSize: 17, maxWidth: 520 }}>Choose from the complete SAFe curriculum. Every certification is delivered live by our SAFe SPC with enterprise coaching built in.</p>
         </div>
       </div>
       <div className="section">
@@ -1180,21 +1179,21 @@ const RegistrationFlow = ({ currency, toast, preSelectedCert, setPage }) => {
           </div>
           {/* Summary panel */}
           <div>
-            <div style={{ background: 'var(--navy)', borderRadius: 16, padding: 28, color: 'white', position: 'sticky', top: 80 }}>
+            <div style={{ background: '#EEF5FF', border: '1px solid var(--border)', borderRadius: 16, padding: 28, color: 'var(--navy)', position: 'sticky', top: 80 }}>
               <div style={{ fontFamily: 'Playfair Display', fontSize: 18, marginBottom: 20 }}>Order Summary</div>
               <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: 20, marginBottom: 20 }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 12 }}>
                   <span className="badge badge-gold" style={{ marginTop: 2 }}>{getCert(selectedSession?.certId || UPCOMING[0].certId)?.code}</span>
                   <div>
                     <div style={{ fontSize: 14, fontWeight: 600 }}>{getCert(selectedSession?.certId || UPCOMING[0].certId)?.title}</div>
-                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>{selectedSession ? new Date(selectedSession.date).toLocaleDateString() : 'TBD'}</div>
-                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>{selectedSession?.format || 'Virtual'}</div>
+                    <div style={{ fontSize: 12, color: 'var(--slate)', marginTop: 4 }}>{selectedSession ? new Date(selectedSession.date).toLocaleDateString() : 'TBD'}</div>
+                    <div style={{ fontSize: 12, color: 'var(--slate)' }}>{selectedSession?.format || 'Virtual'}</div>
                   </div>
                 </div>
               </div>
               <div>
                 {[['Course Fee', fmt(basePrice, currency)], ['Early Bird Discount', eb ? `-${fmt(session.price - session.earlyBird, currency)}` : 'N/A'], ['Coupon Discount', couponApplied ? `-${fmt(Math.round(basePrice * 0.1), currency)}` : 'N/A']].map(([label, val]) => (
-                  <div key={label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'rgba(255,255,255,0.65)', marginBottom: 10 }}>
+                  <div key={label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--slate)', marginBottom: 10 }}>
                     <span>{label}</span><span style={{ color: val.startsWith('-') ? 'var(--success)' : 'inherit' }}>{val}</span>
                   </div>
                 ))}
@@ -1202,10 +1201,10 @@ const RegistrationFlow = ({ currency, toast, preSelectedCert, setPage }) => {
                   <span>Total</span>
                   <span style={{ fontFamily: 'Playfair Display', color: 'var(--gold)' }}>{fmt(finalPrice, currency)}</span>
                 </div>
-                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 8 }}>Tax/GST may apply based on location</div>
+                <div style={{ fontSize: 11, color: 'var(--slate-light)', marginTop: 8 }}>Tax/GST may apply based on location</div>
               </div>
-              <div style={{ marginTop: 24, padding: 16, background: 'rgba(255,255,255,0.05)', borderRadius: 10 }}>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', lineHeight: 1.8 }}>
+              <div style={{ marginTop: 24, padding: 16, background: 'rgba(30,58,95,0.05)', borderRadius: 10 }}>
+                <div style={{ fontSize: 12, color: 'var(--slate)', lineHeight: 1.8 }}>
                   ✓ Instant enrollment confirmation<br />
                   ✓ Calendar invite (.ics) sent immediately<br />
                   ✓ Pre-course materials within 24hrs<br />
@@ -1252,9 +1251,9 @@ const RegistrationFlow = ({ currency, toast, preSelectedCert, setPage }) => {
                 <button className="btn btn-primary"><Icon name="download" /> Download .ics</button>
                 <button className="btn btn-outline-navy"><Icon name="download" /> Download Invoice</button>
               </div>
-              <div style={{ marginTop: 32, padding: 20, background: 'var(--navy)', borderRadius: 12, maxWidth: 500, margin: '32px auto 0', color: 'white' }}>
-                <div style={{ fontFamily: 'Playfair Display', fontSize: 16, marginBottom: 8 }}>🎓 Your Certificate Journey Begins</div>
-                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.7 }}>Upon successful completion and exam pass, your digital SAFe certificate will be automatically issued and emailed within 48 hours. Your credential will also appear on the Scaled Agile credentials portal.</div>
+              <div style={{ marginTop: 32, padding: 20, background: '#EEF5FF', border: '1px solid var(--border)', borderRadius: 12, maxWidth: 500, margin: '32px auto 0' }}>
+                <div style={{ fontFamily: 'Playfair Display', fontSize: 16, color: 'var(--navy)', marginBottom: 8 }}>🎓 Your Certificate Journey Begins</div>
+                <div style={{ fontSize: 13, color: 'var(--slate)', lineHeight: 1.7 }}>Upon successful completion and exam pass, your digital SAFe certificate will be automatically issued and emailed within 48 hours. Your credential will also appear on the Scaled Agile credentials portal.</div>
               </div>
             </>
           )}
@@ -1265,10 +1264,10 @@ const RegistrationFlow = ({ currency, toast, preSelectedCert, setPage }) => {
 
   return (
     <div style={{ paddingTop: 64, minHeight: '100vh', background: 'var(--cream)' }}>
-      <div style={{ background: 'var(--navy)', padding: '40px 0 30px' }}>
+      <div style={{ background: 'linear-gradient(135deg,#EBF2FF 0%,#E6EEFF 100%)', padding: '40px 0 30px' }}>
         <div className="container">
           <div className="section-label">Course Enrollment</div>
-          <h1 className="section-title light" style={{ fontSize: 28 }}>Register for a SAFe Certification</h1>
+          <h1 className="section-title" style={{ fontSize: 28 }}>Register for a SAFe Certification</h1>
         </div>
       </div>
       <div className="container" style={{ paddingTop: 40, paddingBottom: 60 }}>
@@ -1330,38 +1329,38 @@ const RegistrationFlow = ({ currency, toast, preSelectedCert, setPage }) => {
         
         {/* Certificate Details Banner - shown when quick link is used */}
         {preSelectedCert && cert && (
-          <div style={{ 
-            background: 'linear-gradient(135deg, var(--navy-light), var(--navy))', 
-            color: 'white',
-            padding: '20px 24px', 
-            borderRadius: 12, 
+          <div style={{
+            background: 'linear-gradient(135deg, #DBE8FF, #C8DBFF)',
+            color: 'var(--navy)',
+            padding: '20px 24px',
+            borderRadius: 12,
             marginBottom: 24,
             border: '2px solid var(--gold)'
           }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 24, alignItems: 'center' }}>
               <div>
-                <div style={{ fontSize: 12, color: 'var(--gold)', fontWeight: 600, marginBottom: 4 }}>COURSE SELECTED</div>
+                <div style={{ fontSize: 12, color: '#8B6914', fontWeight: 600, marginBottom: 4 }}>COURSE SELECTED</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
                   <span className="badge badge-gold">{cert.code}</span>
                   <h2 style={{ fontFamily: 'Playfair Display', fontSize: 22, fontWeight: 600 }}>{cert.title}</h2>
                 </div>
-                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', marginBottom: 14, lineHeight: 1.5 }}>{cert.desc}</div>
+                <div style={{ fontSize: 13, color: 'var(--slate)', marginBottom: 14, lineHeight: 1.5 }}>{cert.desc}</div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 16 }}>
                   <div>
-                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)' }}>DURATION</div>
+                    <div style={{ fontSize: 11, color: 'var(--slate-light)' }}>DURATION</div>
                     <div style={{ fontSize: 14, fontWeight: 600 }}>{cert.duration}</div>
                   </div>
                   <div>
-                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)' }}>STARTING FROM</div>
+                    <div style={{ fontSize: 11, color: 'var(--slate-light)' }}>STARTING FROM</div>
                     <div style={{ fontSize: 14, fontWeight: 600 }}>
-                      {isEarlyBird(UPCOMING.find(s => s.certId === selected)?.ebDeadline) 
+                      {isEarlyBird(UPCOMING.find(s => s.certId === selected)?.ebDeadline)
                         ? fmt(UPCOMING.find(s => s.certId === selected)?.earlyBird, currency)
                         : fmt(UPCOMING.find(s => s.certId === selected)?.price, currency)
                       }
                     </div>
                   </div>
                   <div>
-                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)' }}>UPCOMING DATES</div>
+                    <div style={{ fontSize: 11, color: 'var(--slate-light)' }}>UPCOMING DATES</div>
                     <div style={{ fontSize: 14, fontWeight: 600 }}>
                       {UPCOMING.filter(s => s.certId === selected).length > 0
                         ? UPCOMING.filter(s => s.certId === selected).map(s =>
@@ -1374,7 +1373,7 @@ const RegistrationFlow = ({ currency, toast, preSelectedCert, setPage }) => {
                 </div>
               </div>
               <div style={{ textAlign: 'center', minWidth: 120 }}>
-                <div style={{ width: 80, height: 80, background: 'rgba(255,255,255,0.1)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36, marginBottom: 12 }}>
+                <div style={{ width: 80, height: 80, background: 'rgba(30,58,95,0.08)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36, marginBottom: 12 }}>
                   {step === 1 ? '📚' : step === 2 ? '📅' : step === 3 ? '👤' : step === 4 ? '💳' : '✓'}
                 </div>
                 <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)' }}>Step {step} of {steps.length}</div>
@@ -1393,11 +1392,11 @@ const RegistrationFlow = ({ currency, toast, preSelectedCert, setPage }) => {
 
 const CorporatePage = ({ toast }) => (
   <div style={{ paddingTop: 64 }}>
-    <div style={{ background: 'var(--navy)', padding: '100px 0 60px' }}>
+    <div style={{ background: 'linear-gradient(135deg,#EBF2FF 0%,#E6EEFF 100%)', padding: '100px 0 60px' }}>
       <div className="container">
         <div className="section-label">Enterprise Solutions</div>
-        <h1 className="section-title light" style={{ marginBottom: 16 }}>Corporate SAFe Training</h1>
-        <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 17, maxWidth: 580 }}>
+        <h1 className="section-title" style={{ marginBottom: 16 }}>Corporate SAFe Training</h1>
+        <p style={{ color: 'var(--slate)', fontSize: 17, maxWidth: 580 }}>
           Tailored SAFe training programs for your entire organization. Private cohorts, custom content, flexible scheduling, and post-training coaching support.
         </p>
       </div>
@@ -1419,13 +1418,13 @@ const CorporatePage = ({ toast }) => (
             </div>
           ))}
         </div>
-        <div style={{ background: 'var(--navy)', borderRadius: 20, padding: '48px 56px', display: 'grid', gridTemplateColumns: '1fr auto', gap: 40, alignItems: 'center' }}>
+        <div style={{ background: 'linear-gradient(135deg,#EBF2FF,#E6EEFF)', border: '1px solid var(--border)', borderRadius: 20, padding: '48px 56px', display: 'grid', gridTemplateColumns: '1fr auto', gap: 40, alignItems: 'center' }}>
           <div>
-            <div style={{ fontFamily: 'Playfair Display', fontSize: 28, color: 'white', marginBottom: 12 }}>Request a Corporate Training Quote</div>
-            <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 15, marginBottom: 24 }}>Tell us your team size, target certifications, and preferred timeline. We'll respond within 1 business day.</p>
+            <div style={{ fontFamily: 'Playfair Display', fontSize: 28, color: 'var(--navy)', marginBottom: 12 }}>Request a Corporate Training Quote</div>
+            <p style={{ color: 'var(--slate)', fontSize: 15, marginBottom: 24 }}>Tell us your team size, target certifications, and preferred timeline. We'll respond within 1 business day.</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               {['Contact Name', 'Work Email', 'Company', 'Team Size'].map(f => (
-                <input key={f} className="form-input" placeholder={f} style={{ background: 'rgba(255,255,255,0.08)', borderColor: 'rgba(255,255,255,0.15)', color: 'white' }} />
+                <input key={f} className="form-input" placeholder={f} />
               ))}
             </div>
           </div>
