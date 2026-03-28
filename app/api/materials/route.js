@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { authOptions } from '../auth/[...nextauth]/route';
 const { pool } = require('../../../lib/db');
 
 // GET /api/materials?certId=uuid  — returns materials for a cert the user is enrolled in
