@@ -76,7 +76,7 @@ export async function POST(req) {
         'Square-Version': '2024-01-18',
       },
       body: JSON.stringify({
-        idempotency_key: `${email}-${courseTitle}-${Date.now()}`,
+        idempotency_key: `pay-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,
         source_id: sourceId,
         amount_money: {
           amount: Math.round(amount * 100),
@@ -89,6 +89,8 @@ export async function POST(req) {
     });
 
     const squareData = await squareRes.json();
+    console.log('[payment] Square response status:', squareRes.status);
+    console.log('[payment] Square response body:', JSON.stringify(squareData));
 
     if (!squareRes.ok || squareData.errors) {
       const msg = squareData.errors?.[0]?.detail || 'Payment failed. Please try again.';
