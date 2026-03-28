@@ -1,48 +1,92 @@
 'use client';
-import { useState, useEffect } from 'react';
-import {
-  PaymentElement,
-  Elements,
-  useStripe,
-  useElements,
-} from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
+import { useState, useEffect, useRef } from 'react';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
+const SQUARE_JS_URL = process.env.NEXT_PUBLIC_SQUARE_ENVIRONMENT === 'sandbox'
+  ? 'https://sandbox.web.squarecdn.com/v1/square.js'
+  : 'https://web.squarecdn.com/v1/square.js';
 
-function CheckoutForm({ amount, currency, onSuccess }) {
-  const stripe = useStripe();
-  const elements = useElements();
+export default function PaymentForm({ amount, currency, name, email, courseTitle, onSuccess }) {
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);
   const [error, setError] = useState('');
+  const cardRef = useRef(null);
+  const initializedRef = useRef(false);
+
+  useEffect(() => {
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+
+    const initSquare = async () => {
+      try {
+        const payments = window.Square.payments(
+          process.env.NEXT_PUBLIC_SQUARE_APP_ID,
+          process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID
+        );
+        const card = await payments.card({
+          style: {
+            '.input-container': { borderColor: '#E2E8F0', borderRadius: '8px' },
+            '.input-container.is-focus': { borderColor: '#C9A84C' },
+            '.input-container.is-error': { borderColor: '#EF4444' },
+            '.message-text': { color: '#64748B' },
+            '.message-icon': { color: '#64748B' },
+          },
+        });
+        await card.attach('#square-card-container');
+        cardRef.current = card;
+        setReady(true);
+      } catch (err) {
+        console.error('[Square] init error:', err);
+        setError('Failed to load payment form. Please refresh and try again.');
+      }
+    };
+
+    if (window.Square) {
+      initSquare();
+    } else {
+      const script = document.createElement('script');
+      script.src = SQUARE_JS_URL;
+      script.onload = initSquare;
+      script.onerror = () => setError('Failed to load payment library. Please refresh and try again.');
+      document.head.appendChild(script);
+    }
+
+    return () => {
+      if (cardRef.current) {
+        cardRef.current.destroy().catch(() => {});
+        cardRef.current = null;
+      }
+    };
+  }, []);
 
   const handleSubmit = async () => {
-    if (!stripe || !elements) {
-      setError('Payment is still loading. Please wait a moment and try again.');
-      return;
-    }
+    if (!cardRef.current || !ready) return;
     setLoading(true);
     setError('');
 
     try {
-      const { error: submitError } = await elements.submit();
-      if (submitError) {
-        setError(submitError.message);
+      const result = await cardRef.current.tokenize();
+      if (result.status !== 'OK') {
+        setError(result.errors?.[0]?.message || 'Card details invalid. Please check and try again.');
         setLoading(false);
         return;
       }
 
-      const { error: confirmError } = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          return_url: `${window.location.origin}/registration-success`,
-        },
-        redirect: 'if_required',
+      const res = await fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sourceId: result.token,
+          amount,
+          currency: currency || 'USD',
+          name,
+          email,
+          courseTitle,
+        }),
       });
+      const data = await res.json();
 
-      if (confirmError) {
-        setError(confirmError.message);
+      if (data.error) {
+        setError(data.error);
         setLoading(false);
       } else {
         onSuccess();
@@ -55,21 +99,12 @@ function CheckoutForm({ amount, currency, onSuccess }) {
 
   return (
     <div>
-      {!ready && (
+      {!ready && !error && (
         <div style={{ textAlign: 'center', padding: '20px 0', color: '#94A3B8', fontSize: 14 }}>
           Loading payment form…
         </div>
       )}
-      <div style={{ display: ready ? 'block' : 'none' }}>
-        <PaymentElement
-          onReady={() => setReady(true)}
-          options={{
-            layout: 'tabs',
-            wallets: { applePay: 'auto', googlePay: 'auto' },
-            terms: { card: 'never' },
-          }}
-        />
-      </div>
+      <div id="square-card-container" style={{ display: ready ? 'block' : 'none', minHeight: 89 }} />
       {error && (
         <div style={{ background: '#FEE2E2', color: '#991B1B', padding: '12px', borderRadius: '8px', marginTop: '16px', fontSize: '14px' }}>
           {error}
@@ -78,97 +113,20 @@ function CheckoutForm({ amount, currency, onSuccess }) {
       <button
         onClick={handleSubmit}
         disabled={loading || !ready}
-        style={{ width: '100%', padding: '14px', background: (loading || !ready) ? '#9CA3AF' : '#0B1629', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold', cursor: (loading || !ready) ? 'not-allowed' : 'pointer', marginTop: '20px' }}
+        style={{
+          width: '100%', padding: '14px',
+          background: (loading || !ready) ? '#9CA3AF' : '#1E3A5F',
+          color: '#fff', border: 'none', borderRadius: '8px',
+          fontSize: '16px', fontWeight: 'bold',
+          cursor: (loading || !ready) ? 'not-allowed' : 'pointer',
+          marginTop: '20px',
+        }}
       >
         {loading ? 'Processing payment…' : `Pay ${currency} ${amount}`}
       </button>
       <p style={{ marginTop: '10px', fontSize: '12px', color: '#9CA3AF', textAlign: 'center' }}>
-        🔒 256-bit SSL encrypted · Powered by Stripe
+        🔒 256-bit SSL encrypted · Powered by Square
       </p>
     </div>
-  );
-}
-
-export default function PaymentForm({ amount, currency, name, email, courseTitle, onSuccess }) {
-  const [clientSecret, setClientSecret] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    setClientSecret('');
-    setError('');
-  }, [email, courseTitle]);
-
-  // Auto-initialize payment on mount
-  useEffect(() => {
-    if (!clientSecret && !loading && !error) {
-      initializePayment();
-    }
-  }, []);
-
-  const initializePayment = async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const res = await fetch('/api/payment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount, currency, name, email, courseTitle }),
-      });
-      const data = await res.json();
-      if (data.error) {
-        setError(data.error);
-      } else {
-        setClientSecret(data.clientSecret);
-      }
-    } catch (err) {
-      setError('Failed to connect to payment service. Please try again.');
-    }
-    setLoading(false);
-  };
-
-  if (!clientSecret) {
-    return (
-      <div style={{ textAlign: 'center', padding: '24px' }}>
-        {loading ? (
-          <div>
-            <div style={{ width: 32, height: 32, border: '3px solid #E2E8F0', borderTopColor: '#0B1629', borderRadius: '50%', animation: 'spin 0.7s linear infinite', margin: '0 auto 12px' }} />
-            <p style={{ color: '#64748B', fontSize: 14 }}>Preparing secure payment…</p>
-          </div>
-        ) : error ? (
-          <div>
-            <div style={{ background: '#FEE2E2', color: '#991B1B', padding: '12px', borderRadius: '8px', marginBottom: '16px', fontSize: '14px' }}>
-              {error}
-            </div>
-            <button
-              onClick={initializePayment}
-              style={{ padding: '12px 28px', background: '#0B1629', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '15px', fontWeight: 'bold', cursor: 'pointer' }}
-            >
-              Try Again
-            </button>
-          </div>
-        ) : null}
-        <p style={{ marginTop: '12px', fontSize: '12px', color: '#9CA3AF' }}>
-          🔒 256-bit SSL encrypted · Powered by Stripe
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <Elements
-      stripe={stripePromise}
-      options={{ clientSecret, loader: 'auto', appearance: { theme: 'stripe' } }}
-      key={clientSecret}
-    >
-      <CheckoutForm
-        amount={amount}
-        currency={currency}
-        name={name}
-        email={email}
-        courseTitle={courseTitle}
-        onSuccess={onSuccess}
-      />
-    </Elements>
   );
 }
