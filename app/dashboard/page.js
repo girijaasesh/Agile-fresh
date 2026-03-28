@@ -61,6 +61,7 @@ export default function DashboardPage() {
   const paidCount = past.filter(r => r.payment_status === 'paid').length + upcoming.length;
 
   return (
+    <>
     <div style={{ minHeight: '100vh', background: '#F1F5F9', fontFamily: "'DM Sans', sans-serif" }}>
 
       {/* Nav */}
@@ -322,6 +323,7 @@ export default function DashboardPage() {
         </div>
       </div>
     )}
+    </>
   );
 }
 
