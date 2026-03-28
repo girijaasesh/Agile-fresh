@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 const PaymentForm = dynamic(() => import('../../components/PaymentForm'), { ssr: false });
 
 // ─── Brand data (mirrors AgileEdgeMVP) ───────────────────────────────────────
-const COUPON_COURSES = ['sa', 'ssm']; // courses that show coupon field
+// coupon field shown for all courses
 
 const CERTIFICATIONS = [
   { id: 'sa',     code: 'SA',   title: 'SAFe Agilist',               role: 'Leadership',    price: 995,  earlyBird: 400,  duration: '2 Days', desc: 'Foundation certification for enterprise agile leaders. Lean-Agile mindset and enterprise-scale transformation.' },
@@ -270,7 +270,7 @@ export default function QuickRegisterClient() {
   const couponDiscount = couponApplied ? (couponApplied.discount_type === 'fixed' ? couponApplied.discount_value : Math.round(basePrice * couponApplied.discount_value / 100)) : 0;
   const price    = Math.max(0, basePrice - couponDiscount);
 
-  const showCoupon = COUPON_COURSES.includes(form.certId);
+  const showCoupon = !!form.certId;
 
   useEffect(() => { setCouponApplied(null); setCouponCode(''); setCouponError(''); }, [form.certId]);
 
@@ -710,12 +710,61 @@ function RegistrationForm({ form, set, blur, fieldErr, cert, sessions, session, 
       )}
 
       {cert && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', background: 'var(--navy)', borderRadius: 10, marginBottom: 16, color: 'white' }}>
-          <div>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,.5)', marginBottom: 2 }}>{cert.title}</div>
-            {eb && <div style={{ fontSize: 11, color: 'var(--success)' }}>⚡ Special rate applied</div>}
+        <div style={{ background: 'var(--navy)', borderRadius: 10, marginBottom: 16, color: 'white', overflow: 'hidden' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px' }}>
+            <div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,.5)', marginBottom: 2 }}>{cert.title}</div>
+              {eb && <div style={{ fontSize: 11, color: 'var(--success)' }}>⚡ Special rate applied</div>}
+              {couponDiscount > 0 && (
+                <div style={{ fontSize: 11, color: '#86EFAC' }}>🏷 Coupon: −${Number(couponDiscount).toLocaleString('en-US')}</div>
+              )}
+            </div>
+            <div>
+              {couponDiscount > 0 && (
+                <div style={{ fontSize: 13, color: 'rgba(255,255,255,.4)', textDecoration: 'line-through', textAlign: 'right' }}>${basePrice.toLocaleString('en-US')}</div>
+              )}
+              <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 24, color: 'var(--gold)' }}>${price.toLocaleString('en-US')}</div>
+            </div>
           </div>
-          <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 24, color: 'var(--gold)' }}>${price.toLocaleString('en-US')}</div>
+        </div>
+      )}
+
+      {showCoupon && (
+        <div style={{ marginBottom: 16 }}>
+          <label className="qr-label">Coupon Code</label>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <input
+              className="qr-input"
+              placeholder="Enter coupon code"
+              value={couponCode}
+              onChange={e => setCouponCode(e.target.value.toUpperCase())}
+              onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), applyCoupon())}
+              style={{ flex: 1, textTransform: 'uppercase', letterSpacing: '0.05em' }}
+              disabled={!!couponApplied}
+            />
+            {couponApplied ? (
+              <button type="button"
+                onClick={() => { setCouponApplied(null); setCouponCode(''); setCouponError(''); }}
+                style={{ padding: '0 14px', background: '#FEE2E2', color: '#991B1B', border: 'none', borderRadius: 8, fontSize: 13, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                Remove
+              </button>
+            ) : (
+              <button type="button"
+                onClick={applyCoupon}
+                disabled={couponLoading || !couponCode.trim()}
+                style={{ padding: '0 16px', background: 'var(--gold)', color: 'var(--navy)', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: couponLoading || !couponCode.trim() ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap', opacity: couponLoading || !couponCode.trim() ? 0.6 : 1 }}>
+                {couponLoading ? 'Checking…' : 'Apply'}
+              </button>
+            )}
+          </div>
+          {couponApplied && (
+            <div style={{ marginTop: 6, fontSize: 13, color: '#15803D', fontWeight: 500 }}>
+              ✅ Coupon applied — ${Number(couponDiscount).toLocaleString('en-US')} off
+            </div>
+          )}
+          {couponError && (
+            <div style={{ marginTop: 6, fontSize: 13, color: 'var(--danger)' }}>{couponError}</div>
+          )}
         </div>
       )}
 
