@@ -45,6 +45,7 @@ export default function AdminClient() {
               { label: '📋 View Registrations', path: '/admin/registrations' },
               { label: '📅 Manage Sessions', path: '/admin/sessions' },
               { label: '🎟️ Manage Coupons', path: '/admin/coupons' },
+              { label: '📚 Course Materials', path: '/admin/materials' },
               { label: '⏳ View Waitlist', path: '/admin/waitlist' },
               { label: '🎓 Certificates', path: '/admin/certificates' },
               { label: '🔗 Quick Links', path: '/admin/quicklinks' },

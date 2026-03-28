@@ -6,6 +6,9 @@ import { useRouter } from 'next/navigation';
 const fmt = (n) => `$${Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : 'TBD';
 
+const TYPE_ICONS = { pdf: '📄', ppt: '📊', word: '📝', video: '🎬' };
+const TYPE_LABELS = { pdf: 'PDF', ppt: 'PowerPoint', word: 'Word Doc', video: 'Video' };
+
 const CERT_DESCS = {
   SA:   'Foundation certification for enterprise agile leaders.',
   SSM:  'Become a skilled Scrum Master in a SAFe enterprise environment.',
@@ -22,6 +25,9 @@ export default function DashboardPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('overview');
+  const [materials, setMaterials] = useState([]);
+  const [matLoading, setMatLoading] = useState(false);
+  const [viewer, setViewer] = useState(null); // { url, title, type, can_download }
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/auth?next=/dashboard');
@@ -34,6 +40,15 @@ export default function DashboardPage() {
       .then(d => { setData(d); setLoading(false); })
       .catch(() => setLoading(false));
   }, [status]);
+
+  useEffect(() => {
+    if (tab !== 'materials' || status !== 'authenticated') return;
+    setMatLoading(true);
+    fetch('/api/materials')
+      .then(r => r.json())
+      .then(d => { setMaterials(Array.isArray(d) ? d : []); setMatLoading(false); })
+      .catch(() => setMatLoading(false));
+  }, [tab, status]);
 
   if (status === 'loading' || loading) return <LoadingScreen />;
   if (status === 'unauthenticated') return null;
@@ -102,7 +117,7 @@ export default function DashboardPage() {
 
         {/* Tabs */}
         <div style={{ display: 'flex', gap: 4, marginBottom: 24, background: 'white', borderRadius: 10, padding: 4, width: 'fit-content', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-          {[['overview', 'Overview'], ['upcoming', 'Upcoming'], ['history', 'History'], ['explore', 'Explore Courses']].map(([id, label]) => (
+          {[['overview', 'Overview'], ['upcoming', 'Upcoming'], ['materials', '📚 Course Materials'], ['history', 'History'], ['explore', 'Explore Courses']].map(([id, label]) => (
             <button key={id} onClick={() => setTab(id)}
               style={{ padding: '8px 18px', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 500, transition: 'all .15s',
                 background: tab === id ? '#1E3A5F' : 'transparent',
@@ -193,6 +208,58 @@ export default function DashboardPage() {
           </div>
         )}
 
+        {/* Tab: Materials */}
+        {tab === 'materials' && (
+          <div>
+            {matLoading ? (
+              <div style={{ textAlign: 'center', padding: 60, color: '#94A3B8' }}>Loading materials…</div>
+            ) : materials.length === 0 ? (
+              <EmptyState msg="No materials available yet" sub="Course materials will appear here once added by your instructor." />
+            ) : (
+              <>
+                {/* Group by certification */}
+                {[...new Set(materials.map(m => m.cert_code))].map(code => {
+                  const group = materials.filter(m => m.cert_code === code);
+                  return (
+                    <div key={code} style={{ marginBottom: 32 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+                        <span style={{ background: '#1E3A5F', color: 'white', padding: '4px 12px', borderRadius: 6, fontSize: 13, fontWeight: 700 }}>{code}</span>
+                        <span style={{ fontSize: 16, fontWeight: 700, color: '#1E3A5F' }}>{group[0].cert_title}</span>
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+                        {group.map(m => (
+                          <div key={m.id} style={{ background: 'white', borderRadius: 12, padding: 20, border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                              <div style={{ fontSize: 32, flexShrink: 0 }}>{TYPE_ICONS[m.type] || '📁'}</div>
+                              <div style={{ flex: 1, minWidth: 0 }}>
+                                <div style={{ fontSize: 14, fontWeight: 700, color: '#1E3A5F', marginBottom: 2 }}>{m.title}</div>
+                                <div style={{ fontSize: 12, color: '#94A3B8', marginBottom: 8 }}>{TYPE_LABELS[m.type]}</div>
+                                {m.description && <div style={{ fontSize: 12, color: '#64748B', marginBottom: 10 }}>{m.description}</div>}
+                                <div style={{ display: 'flex', gap: 8 }}>
+                                  <button onClick={() => setViewer({ url: m.file_url, title: m.title, type: m.type, can_download: m.can_download })}
+                                    style={{ flex: 1, background: '#1E3A5F', color: 'white', border: 'none', borderRadius: 8, padding: '8px 0', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+                                    View
+                                  </button>
+                                  {m.can_download && (
+                                    <a href={m.file_url} target="_blank" rel="noreferrer" download
+                                      style={{ background: '#D1FAE5', color: '#065F46', border: 'none', borderRadius: 8, padding: '8px 14px', fontSize: 13, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+                                      ↓
+                                    </a>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </>
+            )}
+          </div>
+        )}
+
         {/* Tab: Explore */}
         {tab === 'explore' && (
           <div>
@@ -213,6 +280,48 @@ export default function DashboardPage() {
 
       </div>
     </div>
+
+    {/* Material Viewer Modal */}
+    {viewer && (
+      <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 1000, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ background: '#1E3A5F', padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ color: 'white', fontWeight: 600, fontSize: 15 }}>
+            {TYPE_ICONS[viewer.type]} {viewer.title}
+          </div>
+          <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+            {viewer.can_download && (
+              <a href={viewer.url} target="_blank" rel="noreferrer" download
+                style={{ background: '#C9A84C', color: '#1E3A5F', padding: '6px 16px', borderRadius: 6, fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
+                ↓ Download
+              </a>
+            )}
+            <button onClick={() => setViewer(null)}
+              style={{ background: 'rgba(255,255,255,0.15)', color: 'white', border: 'none', borderRadius: 6, padding: '6px 16px', cursor: 'pointer', fontSize: 14 }}>
+              ✕ Close
+            </button>
+          </div>
+        </div>
+        <div style={{ flex: 1, background: '#111' }}>
+          {viewer.type === 'video' ? (
+            viewer.url.includes('youtube') || viewer.url.includes('youtu.be') ? (
+              <iframe
+                src={viewer.url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}
+                style={{ width: '100%', height: '100%', border: 'none' }}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : (
+              <video src={viewer.url} controls controlsList={viewer.can_download ? '' : 'nodownload'} style={{ width: '100%', height: '100%' }} />
+            )
+          ) : (
+            <iframe
+              src={`https://docs.google.com/viewer?url=${encodeURIComponent(viewer.url)}&embedded=true`}
+              style={{ width: '100%', height: '100%', border: 'none' }}
+            />
+          )}
+        </div>
+      </div>
+    )}
   );
 }
 
