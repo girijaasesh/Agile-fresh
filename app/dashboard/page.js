@@ -237,16 +237,10 @@ export default function DashboardPage() {
                                 <div style={{ fontSize: 12, color: '#94A3B8', marginBottom: 8 }}>{TYPE_LABELS[m.type]}</div>
                                 {m.description && <div style={{ fontSize: 12, color: '#64748B', marginBottom: 10 }}>{m.description}</div>}
                                 <div style={{ display: 'flex', gap: 8 }}>
-                                  <button onClick={() => setViewer({ url: m.file_url, title: m.title, type: m.type, can_download: m.can_download })}
+                                  <button onClick={() => setViewer({ url: m.file_url, title: m.title, type: m.type })}
                                     style={{ flex: 1, background: '#1E3A5F', color: 'white', border: 'none', borderRadius: 8, padding: '8px 0', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
                                     View
                                   </button>
-                                  {m.can_download && (
-                                    <a href={m.file_url} target="_blank" rel="noreferrer" download
-                                      style={{ background: '#D1FAE5', color: '#065F46', border: 'none', borderRadius: 8, padding: '8px 14px', fontSize: 13, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-                                      ↓
-                                    </a>
-                                  )}
                                 </div>
                               </div>
                             </div>
@@ -290,34 +284,42 @@ export default function DashboardPage() {
             {TYPE_ICONS[viewer.type]} {viewer.title}
           </div>
           <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-            {viewer.can_download && (
-              <a href={viewer.url} target="_blank" rel="noreferrer" download
-                style={{ background: '#C9A84C', color: '#1E3A5F', padding: '6px 16px', borderRadius: 6, fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
-                ↓ Download
-              </a>
-            )}
+            <a href={viewer.url} target="_blank" rel="noreferrer"
+              style={{ background: 'rgba(255,255,255,0.15)', color: 'white', border: 'none', borderRadius: 6, padding: '6px 16px', cursor: 'pointer', fontSize: 14, textDecoration: 'none' }}>
+              Open in new tab ↗
+            </a>
             <button onClick={() => setViewer(null)}
               style={{ background: 'rgba(255,255,255,0.15)', color: 'white', border: 'none', borderRadius: 6, padding: '6px 16px', cursor: 'pointer', fontSize: 14 }}>
               ✕ Close
             </button>
           </div>
         </div>
-        <div style={{ flex: 1, background: '#111' }}>
+        <div style={{ flex: 1, background: '#111', position: 'relative' }}>
           {viewer.type === 'video' ? (
             viewer.url.includes('youtube') || viewer.url.includes('youtu.be') ? (
               <iframe
                 src={viewer.url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}
-                style={{ width: '100%', height: '100%', border: 'none' }}
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />
             ) : (
-              <video src={viewer.url} controls controlsList={viewer.can_download ? '' : 'nodownload'} style={{ width: '100%', height: '100%' }} />
+              <video src={viewer.url} controls controlsList="nodownload" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
             )
+          ) : viewer.type === 'pdf' ? (
+            <>
+              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666', fontSize: 14 }}>
+                Loading PDF… (may take a moment for large files)
+              </div>
+              <iframe
+                src={viewer.url}
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
+              />
+            </>
           ) : (
             <iframe
-              src={`https://docs.google.com/viewer?url=${encodeURIComponent(viewer.url)}&embedded=true`}
-              style={{ width: '100%', height: '100%', border: 'none' }}
+              src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(viewer.url)}`}
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
             />
           )}
         </div>

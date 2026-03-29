@@ -5,7 +5,7 @@ import MaterialsClient from './MaterialsClient';
 export default async function MaterialsPage() {
   await verifyAdminAuth();
 
-  const [materials, certs, permissions] = await Promise.all([
+  const [materials, certs, permissions, users] = await Promise.all([
     pool.query(`SELECT m.*, c.title as cert_title, c.code as cert_code
                 FROM course_materials m
                 JOIN certifications c ON m.certification_id = c.id
@@ -15,6 +15,7 @@ export default async function MaterialsPage() {
                 FROM material_permissions p
                 JOIN certifications c ON p.certification_id = c.id
                 ORDER BY p.created_at DESC`),
+    pool.query(`SELECT DISTINCT email, full_name FROM registrations ORDER BY full_name`),
   ]);
 
   return (
@@ -22,6 +23,7 @@ export default async function MaterialsPage() {
       materials={materials.rows}
       certifications={certs.rows}
       permissions={permissions.rows}
+      users={users.rows}
     />
   );
 }
