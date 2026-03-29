@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 const TYPE_ICONS = { pdf: '📄', ppt: '📊', word: '📝', video: '🎬' };
@@ -7,15 +7,34 @@ const TYPE_LABELS = { pdf: 'PDF', ppt: 'PowerPoint', word: 'Word Doc', video: 'V
 
 export default function MaterialsClient({ materials: init, certifications, permissions: initPerms }) {
   const router = useRouter();
+  const fileInputRef = useRef(null);
   const [materials, setMaterials] = useState(init);
   const [permissions, setPermissions] = useState(initPerms);
   const [tab, setTab] = useState('materials');
   const [showAdd, setShowAdd] = useState(false);
   const [showPerm, setShowPerm] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploadMode, setUploadMode] = useState('url'); // 'url' | 'file'
+  const [uploadProgress, setUploadProgress] = useState('');
   const [form, setForm] = useState({ title: '', type: 'pdf', file_url: '', certification_id: '', description: '' });
   const [permForm, setPermForm] = useState({ user_email: '', certification_id: '', can_download: false });
   const [error, setError] = useState('');
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setSaving(true); setError(''); setUploadProgress('Uploading file…');
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setForm(f => ({ ...f, file_url: data.url, type: data.type, title: f.title || file.name.replace(/\.[^.]+$/, '') }));
+      setUploadProgress('✅ File uploaded successfully');
+    } catch (e) { setError(e.message); setUploadProgress(''); }
+    finally { setSaving(false); }
+  };
 
   const addMaterial = async () => {
     if (!form.title || !form.file_url || !form.certification_id) { setError('Fill in all required fields.'); return; }
@@ -31,6 +50,7 @@ export default function MaterialsClient({ materials: init, certifications, permi
       setMaterials(m => [{ ...data, cert_title: cert?.title, cert_code: cert?.code }, ...m]);
       setShowAdd(false);
       setForm({ title: '', type: 'pdf', file_url: '', certification_id: '', description: '' });
+      setUploadProgress('');
     } catch (e) { setError(e.message); }
     finally { setSaving(false); }
   };
@@ -109,6 +129,17 @@ export default function MaterialsClient({ materials: init, certifications, permi
         {showAdd && (
           <div style={{ background: 'white', borderRadius: 12, padding: 24, marginBottom: 24, boxShadow: '0 4px 20px rgba(0,0,0,0.1)', border: '1px solid #E2E8F0' }}>
             <div style={{ fontWeight: 700, fontSize: 16, color: '#1E3A5F', marginBottom: 20 }}>Add Course Material</div>
+            {/* Upload mode toggle */}
+            <div style={{ display: 'flex', gap: 4, marginBottom: 20, background: '#F1F5F9', borderRadius: 8, padding: 4, width: 'fit-content' }}>
+              {[['url', '🔗 Paste URL'], ['file', '📤 Upload File']].map(([id, label]) => (
+                <button key={id} type="button" onClick={() => { setUploadMode(id); setForm(f => ({ ...f, file_url: '' })); setUploadProgress(''); }}
+                  style={{ padding: '7px 18px', borderRadius: 6, border: 'none', cursor: 'pointer', fontWeight: 500, fontSize: 13,
+                    background: uploadMode === id ? '#1E3A5F' : 'transparent', color: uploadMode === id ? 'white' : '#64748B' }}>
+                  {label}
+                </button>
+              ))}
+            </div>
+
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
               <div>
                 <label style={lbl}>Title *</label>
@@ -116,7 +147,7 @@ export default function MaterialsClient({ materials: init, certifications, permi
               </div>
               <div>
                 <label style={lbl}>Type *</label>
-                <select style={inp} value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))}>
+                <select style={inp} value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))} disabled={uploadMode === 'file' && !!form.file_url}>
                   <option value="pdf">PDF Document</option>
                   <option value="ppt">PowerPoint</option>
                   <option value="word">Word Document</option>
@@ -130,10 +161,33 @@ export default function MaterialsClient({ materials: init, certifications, permi
                   {certifications.map(c => <option key={c.id} value={c.id}>{c.code} · {c.title}</option>)}
                 </select>
               </div>
-              <div>
-                <label style={lbl}>File URL * <span style={{ fontSize: 11, color: '#94A3B8' }}>(Google Drive, Dropbox, YouTube, etc.)</span></label>
-                <input style={inp} placeholder="https://..." value={form.file_url} onChange={e => setForm(f => ({ ...f, file_url: e.target.value }))} />
-              </div>
+
+              {uploadMode === 'url' ? (
+                <div>
+                  <label style={lbl}>File URL * <span style={{ fontSize: 11, color: '#94A3B8' }}>(Google Drive, Dropbox, YouTube, etc.)</span></label>
+                  <input style={inp} placeholder="https://..." value={form.file_url} onChange={e => setForm(f => ({ ...f, file_url: e.target.value }))} />
+                </div>
+              ) : (
+                <div>
+                  <label style={lbl}>Upload File * <span style={{ fontSize: 11, color: '#94A3B8' }}>(PDF, PPT, Word, MP4 — max 200MB)</span></label>
+                  <input ref={fileInputRef} type="file" accept=".pdf,.ppt,.pptx,.doc,.docx,.mp4,.webm,.mov" onChange={handleFileChange} style={{ display: 'none' }} />
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <button type="button" onClick={() => fileInputRef.current?.click()} disabled={saving}
+                      style={{ ...inp, cursor: 'pointer', background: '#F8FAFC', color: '#1E3A5F', fontWeight: 600, textAlign: 'center', border: '2px dashed #CBD5E1' }}>
+                      {saving ? '⏳ Uploading…' : '📁 Choose File'}
+                    </button>
+                  </div>
+                  {uploadProgress && (
+                    <div style={{ marginTop: 6, fontSize: 13, color: uploadProgress.startsWith('✅') ? '#065F46' : '#64748B' }}>{uploadProgress}</div>
+                  )}
+                  {form.file_url && (
+                    <div style={{ marginTop: 6, fontSize: 12, color: '#94A3B8', wordBreak: 'break-all' }}>
+                      Uploaded: <a href={form.file_url} target="_blank" rel="noreferrer" style={{ color: '#1E3A5F' }}>View file ↗</a>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div style={{ gridColumn: '1/-1' }}>
                 <label style={lbl}>Description</label>
                 <input style={inp} placeholder="Optional description" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
