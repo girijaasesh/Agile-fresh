@@ -574,7 +574,7 @@ const ArticlesCarousel = () => {
 
           {/* Main card */}
           <a key={key} href={`/articles/${main.slug}`} style={{ textDecoration: 'none', display: 'block', animation: 'fadeUp 0.4s ease forwards' }}>
-            <div style={{ borderRadius: 14, overflow: 'hidden', aspectRatio: '16/7', background: '#D8E6F5', marginBottom: 14, boxShadow: '0 4px 20px rgba(30,58,95,0.12)' }}>
+            <div style={{ borderRadius: 14, overflow: 'hidden', aspectRatio: '16/6', background: '#D8E6F5', marginBottom: 14, boxShadow: '0 4px 20px rgba(30,58,95,0.12)' }}>
               {main.cover_image_url
                 ? <img src={main.cover_image_url} alt={main.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 : <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg,#DBEAFE,#C7D9F5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>📝</div>}
