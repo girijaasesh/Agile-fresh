@@ -539,31 +539,31 @@ const ArticlesCarousel = () => {
   const sideCard = (a, dir) => (
     <div
       onClick={() => go(dir === -1 ? (idx - 1 + articles.length) % articles.length : (idx + 1) % articles.length)}
-      style={{ cursor: 'pointer', opacity: 0.38, transition: 'opacity 0.3s', display: 'flex', flexDirection: 'column', gap: 8 }}
-      onMouseEnter={e => e.currentTarget.style.opacity = '0.65'}
-      onMouseLeave={e => e.currentTarget.style.opacity = '0.38'}
+      style={{ cursor: 'pointer', opacity: 0.45, transition: 'opacity 0.3s', display: 'flex', flexDirection: 'column', gap: 8 }}
+      onMouseEnter={e => e.currentTarget.style.opacity = '0.75'}
+      onMouseLeave={e => e.currentTarget.style.opacity = '0.45'}
     >
-      <div style={{ borderRadius: 10, overflow: 'hidden', aspectRatio: '16/9', background: '#1a2840', flexShrink: 0 }}>
+      <div style={{ borderRadius: 10, overflow: 'hidden', aspectRatio: '16/9', background: '#D8E6F5', flexShrink: 0 }}>
         {a.cover_image_url
           ? <img src={a.cover_image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, color: 'rgba(255,255,255,0.2)' }}>📝</div>}
+          : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28 }}>📝</div>}
       </div>
-      <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 13, lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{a.title}</div>
+      <div style={{ color: '#4A6480', fontSize: 13, lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{a.title}</div>
     </div>
   );
 
   return (
-    <div style={{ background: 'linear-gradient(180deg, #07101f 0%, #0B1629 100%)', borderBottom: '1px solid rgba(255,255,255,0.07)', paddingTop: 64 }}>
+    <div style={{ background: 'linear-gradient(135deg, #EBF2FF 0%, #E6EEFF 50%, #EEF4FF 100%)', borderBottom: '1px solid #D1DCF0', paddingTop: 64 }}>
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px' }}>
         {/* Label row */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 0 14px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 0 14px', borderBottom: '1px solid rgba(30,58,95,0.1)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#C9A84C', display: 'inline-block', animation: 'pulse-gold 2s infinite' }} />
-            <span style={{ color: '#C9A84C', fontSize: 10, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase' }}>Latest Articles</span>
+            <span style={{ color: '#8B6914', fontSize: 10, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase' }}>Latest Articles</span>
           </div>
-          <a href="/articles" style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, textDecoration: 'none', fontWeight: 500, transition: 'color 0.2s' }}
-            onMouseEnter={e => e.currentTarget.style.color = '#C9A84C'}
-            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}>
+          <a href="/articles" style={{ color: '#5A7898', fontSize: 13, textDecoration: 'none', fontWeight: 600, transition: 'color 0.2s' }}
+            onMouseEnter={e => e.currentTarget.style.color = '#1E3A5F'}
+            onMouseLeave={e => e.currentTarget.style.color = '#5A7898'}>
             View all →
           </a>
         </div>
@@ -574,21 +574,21 @@ const ArticlesCarousel = () => {
 
           {/* Main card */}
           <a key={key} href={`/articles/${main.slug}`} style={{ textDecoration: 'none', display: 'block', animation: 'fadeUp 0.4s ease forwards' }}>
-            <div style={{ borderRadius: 14, overflow: 'hidden', aspectRatio: '16/7', background: '#111', marginBottom: 14 }}>
+            <div style={{ borderRadius: 14, overflow: 'hidden', aspectRatio: '16/7', background: '#D8E6F5', marginBottom: 14, boxShadow: '0 4px 20px rgba(30,58,95,0.12)' }}>
               {main.cover_image_url
                 ? <img src={main.cover_image_url} alt={main.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                : <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg,#1a2840,#0d1f3c)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>📝</div>}
+                : <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg,#DBEAFE,#C7D9F5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>📝</div>}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
               <span style={{ background: CAT_BG[main.category] || '#EEF5FF', color: CAT_COLOR[main.category] || '#1E3A5F', padding: '3px 10px', borderRadius: 4, fontSize: 11, fontWeight: 700 }}>
                 {CAT_LABELS[main.category] || main.category}
               </span>
-              <span style={{ color: 'rgba(255,255,255,0.28)', fontSize: 12 }}>
+              <span style={{ color: '#8BA6C4', fontSize: 12 }}>
                 {main.published_at ? new Date(main.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
               </span>
             </div>
-            <h3 style={{ color: 'white', fontSize: 19, fontWeight: 700, margin: '0 0 6px', lineHeight: 1.3, fontFamily: "'Playfair Display', serif" }}>{main.title}</h3>
-            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13, margin: 0, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{main.summary}</p>
+            <h3 style={{ color: '#1E3A5F', fontSize: 19, fontWeight: 700, margin: '0 0 6px', lineHeight: 1.3, fontFamily: "'Playfair Display', serif" }}>{main.title}</h3>
+            <p style={{ color: '#5A7898', fontSize: 13, margin: 0, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{main.summary}</p>
           </a>
 
           {articles.length > 1 && sideCard(next, 1)}
@@ -597,7 +597,7 @@ const ArticlesCarousel = () => {
         {/* Dot indicators */}
         <div style={{ display: 'flex', justifyContent: 'center', gap: 6, paddingBottom: 18 }}>
           {articles.map((_, i) => (
-            <button key={i} onClick={() => go(i)} style={{ width: i === idx ? 22 : 6, height: 6, borderRadius: 3, border: 'none', background: i === idx ? '#C9A84C' : 'rgba(255,255,255,0.18)', cursor: 'pointer', transition: 'all 0.35s', padding: 0 }} />
+            <button key={i} onClick={() => go(i)} style={{ width: i === idx ? 22 : 6, height: 6, borderRadius: 3, border: 'none', background: i === idx ? '#C9A84C' : 'rgba(30,58,95,0.18)', cursor: 'pointer', transition: 'all 0.35s', padding: 0 }} />
           ))}
         </div>
       </div>
