@@ -569,7 +569,7 @@ const ArticlesCarousel = () => {
         </div>
 
         {/* Cards row */}
-        <div style={{ display: 'grid', gridTemplateColumns: articles.length > 1 ? '1fr 2fr 1fr' : '1fr', gap: 20, padding: '20px 0 18px', alignItems: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: articles.length > 1 ? '1fr 3fr 1fr' : '1fr', gap: 20, padding: '20px 0 18px', alignItems: 'center' }}>
           {articles.length > 1 && sideCard(prev, -1)}
 
           {/* Main card */}
