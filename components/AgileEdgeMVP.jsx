@@ -560,7 +560,7 @@ const ArticlesCarousel = () => {
               onClick={() => go((idx - 1 + articles.length) % articles.length)}
               style={{
                 position: 'relative', zIndex: 1, flexShrink: 0,
-                width: 40, marginRight: -24,
+                width: 200, marginRight: -64,
                 opacity: 0.5, cursor: 'pointer', transition: 'opacity 0.3s',
                 transform: 'scale(0.88)', transformOrigin: 'right center',
                 borderRadius: 14, overflow: 'hidden', aspectRatio: '3/4',
@@ -607,7 +607,7 @@ const ArticlesCarousel = () => {
               onClick={() => go((idx + 1) % articles.length)}
               style={{
                 position: 'relative', zIndex: 1, flexShrink: 0,
-                width: 40, marginLeft: -24,
+                width: 200, marginLeft: -64,
                 opacity: 0.5, cursor: 'pointer', transition: 'opacity 0.3s',
                 transform: 'scale(0.88)', transformOrigin: 'left center',
                 borderRadius: 14, overflow: 'hidden', aspectRatio: '3/4',
