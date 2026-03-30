@@ -370,24 +370,9 @@ export default function QuickRegisterClient() {
     }
   };
 
-  // Called by PaymentForm after Stripe confirms payment
+  // Called by PaymentForm after payment is confirmed — seat is now secured
   const handlePaymentSuccess = useCallback(() => {
-    // Send confirmation email now that payment is complete
-    fetch('/api/notify', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name:          form.name.trim(),
-        email:         form.email.trim(),
-        course:        cert?.title || 'SAFe Certification',
-        sessionDate:   session?.date   || null,
-        sessionFormat: session?.format || null,
-        sessionTz:     session?.tz     || null,
-        regId,
-        price,
-      }),
-    }).catch(() => {});
-
+    // Confirmation email is sent by /api/payment after charging — no duplicate needed here
     const confirmUrl = new URL('/registration-success', window.location.origin);
     confirmUrl.searchParams.set('name',   form.name.trim());
     confirmUrl.searchParams.set('email',  form.email.trim());

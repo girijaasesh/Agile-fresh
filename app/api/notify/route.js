@@ -27,10 +27,10 @@ function buildHtml({ name, course, sessionDate, sessionFormat, sessionTz, price,
 
         <!-- Status banner -->
         <tr>
-          <td style="background:#FFFBEB;border-bottom:3px solid #C9A84C;padding:20px 40px;text-align:center;">
-            <div style="font-size:32px;margin-bottom:8px;">🎟️</div>
-            <div style="font-size:20px;font-weight:700;color:#0B1629;">Your Seat is Reserved!</div>
-            <div style="font-size:14px;color:#64748B;margin-top:6px;">Complete your payment below to confirm enrollment</div>
+          <td style="background:#FFF7ED;border-bottom:3px solid #F59E0B;padding:20px 40px;text-align:center;">
+            <div style="font-size:32px;margin-bottom:8px;">⏳</div>
+            <div style="font-size:20px;font-weight:700;color:#0B1629;">Registration Pending Payment</div>
+            <div style="font-size:14px;color:#64748B;margin-top:6px;">Your seat is <strong>not confirmed</strong> until payment is completed</div>
           </td>
         </tr>
 
@@ -146,7 +146,7 @@ export async function POST(req) {
       body: JSON.stringify({
         from: `AgileEdge Training <${fromEmail}>`,
         to:   [email],
-        subject: `🎟️ Seat Reserved — ${course} | Complete Your Payment`,
+        subject: `⏳ Payment Required — Complete Your ${course} Registration`,
         html: buildHtml({ name, email, course, sessionDate, sessionFormat, sessionTz, price, regId }),
       }),
     });

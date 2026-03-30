@@ -28,8 +28,8 @@ export async function POST(req) {
   try {
     const result = await pool.query(
       `INSERT INTO registrations
-         (full_name, email, phone, company, job_title, country, session_id, coupon_code, amount_paid, currency)
-       VALUES ($1, $2, $3, $4, $5, $6, $7::uuid, $8, $9, $10)
+         (full_name, email, phone, company, job_title, country, session_id, coupon_code, amount_paid, currency, payment_status)
+       VALUES ($1, $2, $3, $4, $5, $6, $7::uuid, $8, $9, $10, 'pending')
        RETURNING id, created_at`,
       [
         full_name.trim(),
