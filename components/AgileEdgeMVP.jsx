@@ -523,6 +523,14 @@ const ArticlesCarousel = () => {
   const [articles, setArticles] = useState([]);
   const [idx, setIdx] = useState(0);
   const [key, setKey] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useEffect(() => {
     fetch('/api/articles')
@@ -573,7 +581,7 @@ const ArticlesCarousel = () => {
           {/* Left arrow */}
           {articles.length > 1 && (
             <button onClick={() => go((idx - 1 + articles.length) % articles.length)} className="carousel-arrow-left" style={{
-              position: 'absolute', left: -20, zIndex: 10,
+              position: 'absolute', left: isMobile ? 8 : -20, zIndex: 10,
               width: 44, height: 44, borderRadius: '50%',
               background: 'white', border: '1.5px solid #D1DCF0',
               boxShadow: '0 2px 12px rgba(30,58,95,0.15)',
@@ -588,7 +596,7 @@ const ArticlesCarousel = () => {
           {/* Right arrow */}
           {articles.length > 1 && (
             <button onClick={() => go((idx + 1) % articles.length)} className="carousel-arrow-right" style={{
-              position: 'absolute', right: -20, zIndex: 10,
+              position: 'absolute', right: isMobile ? 8 : -20, zIndex: 10,
               width: 44, height: 44, borderRadius: '50%',
               background: 'white', border: '1.5px solid #D1DCF0',
               boxShadow: '0 2px 12px rgba(30,58,95,0.15)',
@@ -601,7 +609,7 @@ const ArticlesCarousel = () => {
           )}
 
           {/* Left card */}
-          {articles.length > 1 && (
+          {articles.length > 1 && !isMobile && (
             <div
               onClick={() => go((idx - 1 + articles.length) % articles.length)}
               className="carousel-side"
@@ -629,7 +637,7 @@ const ArticlesCarousel = () => {
             boxShadow: '0 12px 48px rgba(30,58,95,0.18)',
             overflow: 'hidden', animation: 'fadeUp 0.4s ease forwards',
           }}>
-            <div className="carousel-img" style={{ aspectRatio: '16/6', overflow: 'hidden', background: '#D8E6F5' }}>
+            <div className="carousel-img" style={{ aspectRatio: isMobile ? '4/3' : '16/6', overflow: 'hidden', background: '#D8E6F5' }}>
               {main.cover_image_url
                 ? <img src={main.cover_image_url} alt={main.title} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
                 : <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg,#DBEAFE,#C7D9F5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>📝</div>}
@@ -649,7 +657,7 @@ const ArticlesCarousel = () => {
           </a>
 
           {/* Right card */}
-          {articles.length > 1 && (
+          {articles.length > 1 && !isMobile && (
             <div
               onClick={() => go((idx + 1) % articles.length)}
               className="carousel-side"
