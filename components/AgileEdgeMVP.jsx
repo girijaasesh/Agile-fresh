@@ -536,24 +536,8 @@ const ArticlesCarousel = () => {
   const prev = articles[(idx - 1 + articles.length) % articles.length];
   const next = articles[(idx + 1) % articles.length];
 
-  const sideCard = (a, dir) => (
-    <div
-      onClick={() => go(dir === -1 ? (idx - 1 + articles.length) % articles.length : (idx + 1) % articles.length)}
-      style={{ cursor: 'pointer', opacity: 0.45, transition: 'opacity 0.3s', display: 'flex', flexDirection: 'column', gap: 8 }}
-      onMouseEnter={e => e.currentTarget.style.opacity = '0.75'}
-      onMouseLeave={e => e.currentTarget.style.opacity = '0.45'}
-    >
-      <div style={{ borderRadius: 10, overflow: 'hidden', aspectRatio: '16/9', background: '#D8E6F5', flexShrink: 0 }}>
-        {a.cover_image_url
-          ? <img src={a.cover_image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28 }}>📝</div>}
-      </div>
-      <div style={{ color: '#4A6480', fontSize: 13, lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{a.title}</div>
-    </div>
-  );
-
   return (
-    <div style={{ background: '#FFFFFF', borderBottom: '1px solid #E2E8F0', paddingTop: 64 }}>
+    <div style={{ background: '#FFFFFF', borderBottom: '1px solid #E2E8F0', paddingTop: 64, overflow: 'hidden' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px' }}>
         {/* Label row */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 0 14px', borderBottom: '1px solid rgba(30,58,95,0.1)' }}>
@@ -568,34 +552,80 @@ const ArticlesCarousel = () => {
           </a>
         </div>
 
-        {/* Cards row */}
-        <div style={{ display: 'grid', gridTemplateColumns: articles.length > 1 ? '1fr 3fr 1fr' : '1fr', gap: 20, padding: '20px 0 18px', alignItems: 'center' }}>
-          {articles.length > 1 && sideCard(prev, -1)}
+        {/* Cards row — side cards overlap behind center */}
+        <div style={{ display: 'flex', alignItems: 'center', padding: '24px 0 20px' }}>
 
-          {/* Main card */}
-          <a key={key} href={`/articles/${main.slug}`} style={{ textDecoration: 'none', display: 'block', animation: 'fadeUp 0.4s ease forwards' }}>
-            <div style={{ borderRadius: 14, overflow: 'hidden', aspectRatio: '16/6', background: '#D8E6F5', marginBottom: 14, boxShadow: '0 4px 20px rgba(30,58,95,0.12)' }}>
+          {/* Left card */}
+          {articles.length > 1 && (
+            <div
+              onClick={() => go((idx - 1 + articles.length) % articles.length)}
+              style={{
+                position: 'relative', zIndex: 1, flexShrink: 0,
+                width: 200, marginRight: -64,
+                opacity: 0.5, cursor: 'pointer', transition: 'opacity 0.3s',
+                transform: 'scale(0.88)', transformOrigin: 'right center',
+                borderRadius: 14, overflow: 'hidden', aspectRatio: '3/4',
+                background: '#E4EDF8', boxShadow: '0 4px 16px rgba(30,58,95,0.1)',
+              }}
+              onMouseEnter={e => e.currentTarget.style.opacity = '0.72'}
+              onMouseLeave={e => e.currentTarget.style.opacity = '0.5'}
+            >
+              {prev.cover_image_url
+                ? <img src={prev.cover_image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36 }}>📝</div>}
+            </div>
+          )}
+
+          {/* Center card — on top, highlighted */}
+          <a key={key} href={`/articles/${main.slug}`} style={{
+            flex: 1, position: 'relative', zIndex: 2, display: 'block', textDecoration: 'none',
+            background: 'white', borderRadius: 18,
+            boxShadow: '0 12px 48px rgba(30,58,95,0.18)',
+            overflow: 'hidden', animation: 'fadeUp 0.4s ease forwards',
+          }}>
+            <div style={{ aspectRatio: '16/6', overflow: 'hidden', background: '#D8E6F5' }}>
               {main.cover_image_url
                 ? <img src={main.cover_image_url} alt={main.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 : <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg,#DBEAFE,#C7D9F5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>📝</div>}
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-              <span style={{ background: CAT_BG[main.category] || '#EEF5FF', color: CAT_COLOR[main.category] || '#1E3A5F', padding: '3px 10px', borderRadius: 4, fontSize: 11, fontWeight: 700 }}>
-                {CAT_LABELS[main.category] || main.category}
-              </span>
-              <span style={{ color: '#8BA6C4', fontSize: 12 }}>
-                {main.published_at ? new Date(main.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
-              </span>
+            <div style={{ padding: '16px 22px 20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                <span style={{ background: CAT_BG[main.category] || '#EEF5FF', color: CAT_COLOR[main.category] || '#1E3A5F', padding: '3px 10px', borderRadius: 4, fontSize: 11, fontWeight: 700 }}>
+                  {CAT_LABELS[main.category] || main.category}
+                </span>
+                <span style={{ color: '#8BA6C4', fontSize: 12 }}>
+                  {main.published_at ? new Date(main.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
+                </span>
+              </div>
+              <h3 style={{ color: '#1E3A5F', fontSize: 19, fontWeight: 700, margin: '0 0 6px', lineHeight: 1.3, fontFamily: "'Playfair Display', serif" }}>{main.title}</h3>
+              <p style={{ color: '#5A7898', fontSize: 13, margin: 0, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{main.summary}</p>
             </div>
-            <h3 style={{ color: '#1E3A5F', fontSize: 19, fontWeight: 700, margin: '0 0 6px', lineHeight: 1.3, fontFamily: "'Playfair Display', serif" }}>{main.title}</h3>
-            <p style={{ color: '#5A7898', fontSize: 13, margin: 0, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{main.summary}</p>
           </a>
 
-          {articles.length > 1 && sideCard(next, 1)}
+          {/* Right card */}
+          {articles.length > 1 && (
+            <div
+              onClick={() => go((idx + 1) % articles.length)}
+              style={{
+                position: 'relative', zIndex: 1, flexShrink: 0,
+                width: 200, marginLeft: -64,
+                opacity: 0.5, cursor: 'pointer', transition: 'opacity 0.3s',
+                transform: 'scale(0.88)', transformOrigin: 'left center',
+                borderRadius: 14, overflow: 'hidden', aspectRatio: '3/4',
+                background: '#E4EDF8', boxShadow: '0 4px 16px rgba(30,58,95,0.1)',
+              }}
+              onMouseEnter={e => e.currentTarget.style.opacity = '0.72'}
+              onMouseLeave={e => e.currentTarget.style.opacity = '0.5'}
+            >
+              {next.cover_image_url
+                ? <img src={next.cover_image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36 }}>📝</div>}
+            </div>
+          )}
         </div>
 
         {/* Dot indicators */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 6, paddingBottom: 18 }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 6, paddingBottom: 20 }}>
           {articles.map((_, i) => (
             <button key={i} onClick={() => go(i)} style={{ width: i === idx ? 22 : 6, height: 6, borderRadius: 3, border: 'none', background: i === idx ? '#C9A84C' : 'rgba(30,58,95,0.18)', cursor: 'pointer', transition: 'all 0.35s', padding: 0 }} />
           ))}
