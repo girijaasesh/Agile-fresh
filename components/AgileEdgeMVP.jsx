@@ -570,7 +570,7 @@ const ArticlesCarousel = () => {
               onMouseLeave={e => e.currentTarget.style.opacity = '0.5'}
             >
               {prev.cover_image_url
-                ? <img src={prev.cover_image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ? <img src={prev.cover_image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', transform: 'scale(1.35)', transformOrigin: 'center center' }} />
                 : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36 }}>📝</div>}
             </div>
           )}
@@ -617,7 +617,7 @@ const ArticlesCarousel = () => {
               onMouseLeave={e => e.currentTarget.style.opacity = '0.5'}
             >
               {next.cover_image_url
-                ? <img src={next.cover_image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ? <img src={next.cover_image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', transform: 'scale(1.35)', transformOrigin: 'center center' }} />
                 : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36 }}>📝</div>}
             </div>
           )}
