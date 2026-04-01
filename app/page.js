@@ -1,1 +1,7 @@
-export { default, metadata } from './enterprise-agile/page';
+import EnterpriseAgilePage from './enterprise-agile/page';
+
+export { metadata } from './enterprise-agile/page';
+
+export default function Page() {
+  return <EnterpriseAgilePage />;
+}
