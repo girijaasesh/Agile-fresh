@@ -11,17 +11,6 @@ export default function EnterpriseAgilePage() {
   return (
     <div style={{ fontFamily: "'DM Sans', Arial, sans-serif", background: '#FAFAF8', color: '#111', overflowX: 'hidden' }}>
 
-      {/* ── NAV ── */}
-      <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100, background: 'rgba(250,250,248,0.96)', backdropFilter: 'blur(8px)', borderBottom: '1px solid #DDD', height: NAV_H, display: 'flex', alignItems: 'center' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 28px', width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Link href="/" style={{ fontFamily: 'Georgia, serif', fontSize: 22, color: '#111', fontWeight: 700, textDecoration: 'none', letterSpacing: '-0.01em' }}>Optimized Solutions</Link>
-          <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
-            <Link href="/quick-register" style={{ color: '#666', fontSize: 13, textDecoration: 'none', fontWeight: 500 }}>Training</Link>
-            <Link href="/articles" style={{ color: '#666', fontSize: 13, textDecoration: 'none', fontWeight: 500 }}>Knowledge Hub</Link>
-            <a href="#contact" style={{ background: '#111', color: '#FAFAF8', padding: '8px 20px', fontSize: 13, fontWeight: 600, textDecoration: 'none', borderRadius: 3 }}>Let's Talk</a>
-          </div>
-        </div>
-      </nav>
 
       {/* ── HERO ── */}
       <section style={{ paddingTop: NAV_H, background: '#F5F3EE', borderBottom: '2px solid #111' }}>
