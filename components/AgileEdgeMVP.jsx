@@ -485,7 +485,7 @@ const SeatBar = ({ total, booked, showText = true }) => {
   );
 };
 
-const CourseCard = ({ session, currency, onRegister, onWaitlist }) => {
+const CourseCard = ({ session, currency, onRegister, onWaitlist, showPrice }) => {
   const cert = getCert(session.certId);
   const left = seatsLeft(session);
   const eb = isEarlyBird(session.ebDeadline);
@@ -509,8 +509,14 @@ const CourseCard = ({ session, currency, onRegister, onWaitlist }) => {
       <SeatBar total={session.seats} booked={session.booked} />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 16 }}>
         <div>
-          <div className="cert-price">{fmt(price, currency)}</div>
-          {eb && <div className="cert-eb">⚡ Early bird — save {fmt(session.price - session.earlyBird, currency)}</div>}
+          {showPrice ? (
+            <>
+              <div className="cert-price">{fmt(price, currency)}</div>
+              {eb && <div className="cert-eb">⚡ Early bird — save {fmt(session.price - session.earlyBird, currency)}</div>}
+            </>
+          ) : (
+            <div style={{ fontSize: 13, color: 'var(--slate)', fontStyle: 'italic' }}>Register for further details</div>
+          )}
         </div>
         {left === 0
           ? <button className="btn btn-outline-navy btn-sm" onClick={() => onWaitlist(session)}>Join Waitlist</button>
@@ -698,6 +704,8 @@ const ArticlesCarousel = () => {
 
 const HomePage = ({ setPage, currency, setCurrency, toast }) => {
   const [hovered, setHovered] = useState(null);
+  const { status: homeAuthStatus } = useSession();
+  const showPrice = homeAuthStatus === 'authenticated';
 
   return (
     <div>
@@ -783,29 +791,133 @@ const HomePage = ({ setPage, currency, setCurrency, toast }) => {
         </div>
       </section>}
 
-      {/* Certifications preview */}
+      {/* Certifications section */}
       <section className="section" style={{ background: 'var(--cream)' }}>
         <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: 48 }}>
-            <div className="section-label">SAFe Certifications</div>
-            <h2 className="section-title">Choose Your Certification Path</h2>
-            <p className="section-sub" style={{ margin: '12px auto 0', maxWidth: 520 }}>From foundational to advanced, we offer the complete SAFe certification curriculum delivered by a certified SPC.</p>
+          <div style={{ textAlign: 'center', marginBottom: 56 }}>
+            <div className="section-label">SAFe Certification Programs</div>
+            <h2 className="section-title">Find the Right Certification for You</h2>
+            <p className="section-sub" style={{ margin: '14px auto 0', maxWidth: 560 }}>
+              From foundational agile leadership to advanced program consulting — every certification is delivered live by a SAFe SPC with real-world enterprise coaching built in.
+            </p>
           </div>
-          <div className="grid-4" style={{ marginBottom: 32 }}>
-            {CERTIFICATIONS.slice(0, 4).map(cert => (
-              <div key={cert.id} className="cert-card" onMouseEnter={() => setHovered(cert.id)} onMouseLeave={() => setHovered(null)} onClick={() => setPage('certifications')}>
-                <div className="cert-code">{cert.code} · {cert.role}</div>
-                <div className="cert-title">{cert.title}</div>
-                <div style={{ fontSize: 13, color: 'var(--slate)', lineHeight: 1.6, marginBottom: 12 }}>{cert.desc.slice(0, 80)}...</div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontFamily: 'Playfair Display, serif', fontSize: 20, color: 'var(--navy)' }}>{fmt(cert.earlyBird, currency)}</span>
-                  <span className="badge badge-gold">{cert.duration}</span>
-                </div>
-              </div>
+
+          {/* Role legend */}
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', marginBottom: 40 }}>
+            {[
+              { label: 'Leadership', color: '#1E3A5F', bg: '#EBF2FF' },
+              { label: 'Scrum Master', color: '#065F46', bg: '#D1FAE5' },
+              { label: 'Product Owner', color: '#92400E', bg: '#FEF3C7' },
+              { label: 'Technical', color: '#5B21B6', bg: '#EDE9FE' },
+            ].map(({ label, color, bg }) => (
+              <span key={label} style={{ fontSize: 12, fontWeight: 600, padding: '5px 14px', borderRadius: 20, background: bg, color }}>{label}</span>
             ))}
           </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 24, marginBottom: 40 }}>
+            {CERTIFICATIONS.filter(c => c.id !== 'corp').map(cert => {
+              const roleColors = {
+                Leadership:    { bg: '#EBF2FF', color: '#1E3A5F' },
+                'Scrum Master': { bg: '#D1FAE5', color: '#065F46' },
+                'Product Owner': { bg: '#FEF3C7', color: '#92400E' },
+                Technical:     { bg: '#EDE9FE', color: '#5B21B6' },
+              };
+              const rc = roleColors[cert.role] || { bg: '#F1F5F9', color: '#475569' };
+              return (
+                <div key={cert.id} style={{
+                  background: 'white',
+                  borderRadius: 16,
+                  border: '1px solid #E2E8F0',
+                  padding: 28,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 0,
+                  transition: 'box-shadow 0.2s, transform 0.2s',
+                  cursor: 'pointer',
+                }}
+                  onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 8px 32px rgba(30,58,95,0.12)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'none'; }}
+                  onClick={() => { setPage('register'); }}
+                >
+                  {/* Header */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14 }}>
+                    <span style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 20, background: rc.bg, color: rc.color, letterSpacing: 0.5 }}>{cert.role}</span>
+                    <span style={{ fontSize: 11, fontWeight: 600, padding: '4px 10px', borderRadius: 20, background: '#F8FAFC', color: 'var(--slate)', border: '1px solid #E2E8F0' }}>{cert.duration}</span>
+                  </div>
+
+                  {/* Title */}
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--gold)', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 6 }}>{cert.code}</div>
+                  <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 19, color: 'var(--navy)', fontWeight: 600, marginBottom: 10, lineHeight: 1.3 }}>{cert.title}</div>
+                  <p style={{ fontSize: 13, color: 'var(--slate)', lineHeight: 1.65, marginBottom: 16 }}>{cert.desc}</p>
+
+                  {/* Outcomes */}
+                  <div style={{ marginBottom: 20, flex: 1 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: 'var(--slate)', marginBottom: 8 }}>What you'll learn</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                      {cert.outcomes.slice(0, 3).map(o => (
+                        <div key={o} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--navy)' }}>
+                          <span style={{ color: 'var(--gold)', flexShrink: 0 }}><Icon name="check" size={12} /></span>
+                          {o}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Footer */}
+                  <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ fontSize: 12, color: 'var(--slate)' }}>
+                      {showPrice
+                        ? <span style={{ fontFamily: 'Playfair Display, serif', fontSize: 18, color: 'var(--navy)' }}>{fmt(cert.earlyBird, currency)}</span>
+                        : <span style={{ fontStyle: 'italic' }}>Register for details</span>
+                      }
+                    </div>
+                    <button
+                      className="btn btn-primary btn-sm"
+                      onClick={e => { e.stopPropagation(); setPage('register'); }}
+                    >
+                      Register →
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Corporate card */}
+            <div style={{
+              background: 'linear-gradient(135deg, #1E3A5F, #2D5480)',
+              borderRadius: 16,
+              border: '1px solid var(--navy)',
+              padding: 28,
+              display: 'flex',
+              flexDirection: 'column',
+              color: 'white',
+            }}>
+              <div style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 20, background: 'rgba(201,168,76,0.2)', color: 'var(--gold)', letterSpacing: 0.5, marginBottom: 14, alignSelf: 'flex-start' }}>Corporate</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--gold)', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 6 }}>CORP</div>
+              <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 19, fontWeight: 600, marginBottom: 10, lineHeight: 1.3 }}>Corporate Workshop</div>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', lineHeight: 1.65, marginBottom: 16, flex: 1 }}>
+                Tailored SAFe training for your entire organization. We customize content, format, and delivery to your specific context and challenges.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginBottom: 20 }}>
+                {['Context-specific content', 'Private cohort', 'Flexible scheduling'].map(o => (
+                  <div key={o} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'rgba(255,255,255,0.85)' }}>
+                    <span style={{ color: 'var(--gold)', flexShrink: 0 }}><Icon name="check" size={12} /></span>
+                    {o}
+                  </div>
+                ))}
+              </div>
+              <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 16 }}>
+                <button className="btn btn-gold btn-sm" style={{ width: '100%' }} onClick={() => setPage('corporate')}>
+                  Enquire Now →
+                </button>
+              </div>
+            </div>
+          </div>
+
           <div style={{ textAlign: 'center' }}>
-            <button className="btn btn-outline-navy" onClick={() => setPage('certifications')}>View All 8 Certifications →</button>
+            <button className="btn btn-outline-navy" onClick={() => setPage('certifications')}>
+              Explore All Certifications in Detail →
+            </button>
           </div>
         </div>
       </section>
@@ -822,7 +934,7 @@ const HomePage = ({ setPage, currency, setCurrency, toast }) => {
           </div>
           <div className="grid-3">
             {UPCOMING.slice(0, 3).map((s, i) => (
-              <CourseCard key={i} session={s} currency={currency} onRegister={() => setPage('register')} onWaitlist={() => toast('Added to waitlist! We\'ll notify you when seats open.')} />
+              <CourseCard key={i} session={s} currency={currency} showPrice={showPrice} onRegister={() => setPage('register')} onWaitlist={() => toast('Added to waitlist! We\'ll notify you when seats open.')} />
             ))}
           </div>
         </div>
@@ -953,13 +1065,17 @@ const CertificationsPage = ({ setPage, currency, setPreSelectedCert }) => {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 16 }}>
                   <div>
-                    {cert.price === 0 ? (
-                      <div className="cert-price" style={{ fontSize: 18 }}>Custom Pricing</div>
+                    {authStatus === 'authenticated' ? (
+                      cert.price === 0 ? (
+                        <div className="cert-price" style={{ fontSize: 18 }}>Custom Pricing</div>
+                      ) : (
+                        <>
+                          <div className="cert-price">{fmt(cert.earlyBird, currency)} <span style={{ fontSize: 14, color: 'var(--slate)', textDecoration: 'line-through', fontFamily: 'DM Sans' }}>{fmt(cert.price, currency)}</span></div>
+                          <div className="cert-eb">Early bird rate</div>
+                        </>
+                      )
                     ) : (
-                      <>
-                        <div className="cert-price">{fmt(cert.earlyBird, currency)} <span style={{ fontSize: 14, color: 'var(--slate)', textDecoration: 'line-through', fontFamily: 'DM Sans' }}>{fmt(cert.price, currency)}</span></div>
-                        <div className="cert-eb">Early bird rate</div>
-                      </>
+                      <div style={{ fontSize: 13, color: 'var(--slate)', fontStyle: 'italic' }}>Register for further details</div>
                     )}
                   </div>
                   <div style={{ display: 'flex', gap: 8 }}>
@@ -1242,7 +1358,10 @@ const RegistrationFlow = ({ currency, toast, preSelectedCert, setPage }) => {
                 <div className="cert-title" style={{ fontSize: 16 }}>{cert.title}</div>
                 <div style={{ fontSize: 13, color: 'var(--slate)', margin: '8px 0', lineHeight: 1.5 }}>{cert.desc.slice(0, 90)}...</div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
-                  <span style={{ fontFamily: 'Playfair Display', fontSize: 20, color: 'var(--navy)' }}>{fmt(cert.earlyBird, currency)}</span>
+                  {authSession
+                    ? <span style={{ fontFamily: 'Playfair Display', fontSize: 20, color: 'var(--navy)' }}>{fmt(cert.earlyBird, currency)}</span>
+                    : <span style={{ fontSize: 12, color: 'var(--slate)', fontStyle: 'italic' }}>Register for further details</span>
+                  }
                   <span style={{ fontSize: 12, color: 'var(--slate)' }}>{cert.duration}</span>
                 </div>
               </div>
@@ -1320,7 +1439,9 @@ const RegistrationFlow = ({ currency, toast, preSelectedCert, setPage }) => {
                     <SeatBar total={s.seats} booked={s.booked} />
                     {full
                       ? <button className="btn btn-outline-navy btn-sm" style={{ marginTop: 8 }} onClick={e => { e.stopPropagation(); setSelectedSession(s); setWaitlistMode(true); setStep(3); }}>Join Waitlist</button>
-                      : <div style={{ fontFamily: 'Playfair Display', fontSize: 20, color: 'var(--navy)', marginTop: 6 }}>{fmt(isEarlyBird(s.ebDeadline) ? s.earlyBird : s.price, currency)}</div>
+                      : authSession
+                        ? <div style={{ fontFamily: 'Playfair Display', fontSize: 20, color: 'var(--navy)', marginTop: 6 }}>{fmt(isEarlyBird(s.ebDeadline) ? s.earlyBird : s.price, currency)}</div>
+                        : <div style={{ fontSize: 13, color: 'var(--slate)', fontStyle: 'italic', marginTop: 6 }}>Register for further details</div>
                     }
                     {!full && isEarlyBird(s.ebDeadline) && <div style={{ fontSize: 11, color: 'var(--success)' }}>⚡ Early bird active</div>}
                   </div>
@@ -1579,10 +1700,13 @@ const RegistrationFlow = ({ currency, toast, preSelectedCert, setPage }) => {
                   <div>
                     <div style={{ fontSize: 11, color: 'var(--slate-light)' }}>STARTING FROM</div>
                     <div style={{ fontSize: 14, fontWeight: 600 }}>
-                      {isEarlyBird(UPCOMING.find(s => s.certId === selected)?.ebDeadline)
-                        ? fmt(UPCOMING.find(s => s.certId === selected)?.earlyBird, currency)
-                        : fmt(UPCOMING.find(s => s.certId === selected)?.price, currency)
-                      }
+                      {authSession ? (
+                        isEarlyBird(UPCOMING.find(s => s.certId === selected)?.ebDeadline)
+                          ? fmt(UPCOMING.find(s => s.certId === selected)?.earlyBird, currency)
+                          : fmt(UPCOMING.find(s => s.certId === selected)?.price, currency)
+                      ) : (
+                        <span style={{ fontStyle: 'italic', fontWeight: 400, color: 'var(--slate)' }}>Register for details</span>
+                      )}
                     </div>
                   </div>
                   <div>
