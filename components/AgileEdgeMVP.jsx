@@ -796,7 +796,7 @@ const HomePage = ({ setPage, currency, setCurrency, toast }) => {
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <div className="section-label">SAFe Certification Programs</div>
-            <h2 className="section-title">Find the Right Certification for You <span style={{ display: 'inline-block', fontSize: 14, fontWeight: 700, padding: '4px 12px', borderRadius: 20, background: 'linear-gradient(135deg,#6366F1,#8B5CF6)', color: 'white', verticalAlign: 'middle', marginLeft: 10, fontFamily: 'DM Sans, sans-serif' }}>✦ AI-Powered</span></h2>
+            <h2 className="section-title">AI Powered SAFe Certifications</h2>
             <p className="section-sub" style={{ margin: '14px auto 0', maxWidth: 560 }}>
               From foundational agile leadership to advanced program consulting — every certification is delivered live by a SAFe SPC with real-world enterprise coaching built in.
             </p>
@@ -995,7 +995,7 @@ const CertificationsPage = ({ setPage, currency, setPreSelectedCert }) => {
       <div style={{ background: 'linear-gradient(135deg,#EBF2FF 0%,#E6EEFF 100%)', padding: '120px 0 60px' }}>
         <div className="container">
           <div className="section-label">Our Programs</div>
-          <h1 className="section-title" style={{ marginBottom: 12 }}>SAFe Certification Programs <span style={{ display: 'inline-block', fontSize: 14, fontWeight: 700, padding: '4px 12px', borderRadius: 20, background: 'linear-gradient(135deg,#6366F1,#8B5CF6)', color: 'white', verticalAlign: 'middle', marginLeft: 10, fontFamily: 'DM Sans, sans-serif' }}>✦ AI-Powered</span></h1>
+          <h1 className="section-title" style={{ marginBottom: 12 }}>AI Powered SAFe Certification Programs</h1>
           <p style={{ color: 'var(--slate)', fontSize: 17, maxWidth: 520 }}>Choose from the complete SAFe curriculum. Every certification is delivered live by our SAFe SPC with enterprise coaching built in.</p>
         </div>
       </div>
