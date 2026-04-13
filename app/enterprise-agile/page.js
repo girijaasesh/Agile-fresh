@@ -81,9 +81,9 @@ export default function EnterpriseAgilePage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 0 }}>
             {[
               { code: 'SA',   title: 'SAFe Agilist',               role: 'Leadership',     color: SKY,      desc: 'Foundation certification for enterprise agile leaders. Lean-Agile mindset and transformation at scale.' },
-              { code: 'SSM',  title: 'SAFe Scrum Master',          role: 'Scrum Master',   color: SAGE,     desc: 'Master facilitation, coaching, and servant leadership inside a SAFe enterprise environment.' },
+              { code: 'SSM',  title: 'SAFe Scrum Master',          role: 'Scrum Master',   color: SAGE,     aiPowered: true, desc: 'Master facilitation, coaching, and servant leadership inside a SAFe enterprise environment.' },
               { code: 'SASM', title: 'SAFe Advanced Scrum Master', role: 'Scrum Master',   color: SAGE,     desc: 'Advanced coaching techniques, patterns, anti-patterns, and ART-level coaching.' },
-              { code: 'POPM', title: 'SAFe Product Owner/PM',      role: 'Product Owner',  color: PEACH,    desc: 'Master product ownership at scale — vision, roadmaps, and backlog prioritization.' },
+              { code: 'POPM', title: 'SAFe Product Owner/PM',      role: 'Product Owner',  color: PEACH,    aiPowered: true, desc: 'Master product ownership at scale — vision, roadmaps, and backlog prioritization.' },
               { code: 'SDP',  title: 'SAFe DevOps',                role: 'Technical',      color: LAVENDER, desc: 'Implement DevOps and continuous delivery pipelines to accelerate value delivery.' },
             ].map(({ code, title, role, color, desc }, i) => (
               <div key={code} style={{
@@ -96,7 +96,10 @@ export default function EnterpriseAgilePage() {
               }}>
                 <div style={{ background: color, color: '#fff', fontFamily: 'Georgia, serif', fontWeight: 700, fontSize: 13, padding: '6px 11px', borderRadius: 4, letterSpacing: '0.05em', flexShrink: 0, marginTop: 2 }}>{code}</div>
                 <div>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: TEXT, marginBottom: 4 }}>{title}</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                    <div style={{ fontSize: 16, fontWeight: 700, color: TEXT }}>{title}</div>
+                    {aiPowered && <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 20, background: 'linear-gradient(135deg,#6366F1,#8B5CF6)', color: 'white', whiteSpace: 'nowrap' }}>✦ AI-Powered</span>}
+                  </div>
                   <div style={{ fontSize: 12, color: FAINT, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 7 }}>{role}</div>
                   <div style={{ fontSize: 15, color: MUTED, lineHeight: 1.6 }}>{desc}</div>
                 </div>

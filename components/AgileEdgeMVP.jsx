@@ -36,9 +36,9 @@ const COLORS = `
 // ===================== DATA =====================
 const CERTIFICATIONS = [
   { id: "sa", code: "SA", title: "SAFe Agilist", role: "Leadership", price: 995, earlyBird: 400, duration: "2 Days", seats: 20, available: 7, desc: "Foundation certification for enterprise agile leaders. Understand the Lean-Agile mindset and how to lead an agile transformation at enterprise scale.", outcomes: ["Lead SAFe transformations", "Apply SAFe principles", "Coach Agile teams", "Drive business agility"], audience: "Executives, managers, change agents" },
-  { id: "ssm", code: "SSM", title: "SAFe Scrum Master", role: "Scrum Master", price: 895, earlyBird: 350, duration: "2 Days", seats: 20, available: 12, desc: "Become a skilled Scrum Master in a SAFe enterprise environment. Master facilitation, coaching, and servant leadership.", outcomes: ["Facilitate PI Planning", "Coach agile teams", "Remove impediments at scale", "Manage dependencies"], audience: "Scrum Masters, Team Leads, Project Managers" },
+  { id: "ssm", code: "SSM", title: "SAFe Scrum Master", role: "Scrum Master", price: 895, earlyBird: 350, duration: "2 Days", seats: 20, available: 12, aiPowered: true, desc: "Become a skilled Scrum Master in a SAFe enterprise environment. Master facilitation, coaching, and servant leadership.", outcomes: ["Facilitate PI Planning", "Coach agile teams", "Remove impediments at scale", "Manage dependencies"], audience: "Scrum Masters, Team Leads, Project Managers" },
   { id: "sasm", code: "SASM", title: "SAFe Advanced Scrum Master", role: "Scrum Master", price: 1095, earlyBird: 895, duration: "2 Days", seats: 16, available: 4, desc: "Advanced coaching techniques for experienced Scrum Masters. Master patterns, anti-patterns, and coaching at ART level.", outcomes: ["Coach multiple teams", "ART-level facilitation", "Coaching at scale", "Lean problem-solving"], audience: "Experienced Scrum Masters seeking advanced skills" },
-  { id: "popm", code: "POPM", title: "SAFe Product Owner/PM", role: "Product Owner", price: 995, earlyBird: 795, duration: "2 Days", seats: 20, available: 9, desc: "Master product ownership in a scaled agile environment. Learn to define vision, roadmaps, and prioritize the backlog at enterprise scale.", outcomes: ["Define product vision", "Prioritize PI objectives", "Manage program backlog", "Engage stakeholders"], audience: "Product Owners, Product Managers, Business Analysts" },
+  { id: "popm", code: "POPM", title: "SAFe Product Owner/PM", role: "Product Owner", price: 995, earlyBird: 795, duration: "2 Days", seats: 20, available: 9, aiPowered: true, desc: "Master product ownership in a scaled agile environment. Learn to define vision, roadmaps, and prioritize the backlog at enterprise scale.", outcomes: ["Define product vision", "Prioritize PI objectives", "Manage program backlog", "Engage stakeholders"], audience: "Product Owners, Product Managers, Business Analysts" },
   { id: "devops", code: "SDP", title: "SAFe DevOps", role: "Technical", price: 995, earlyBird: 795, duration: "2 Days", seats: 18, available: 11, desc: "Implement DevOps and continuous delivery pipelines in a SAFe environment. Accelerate value delivery through technical excellence.", outcomes: ["Build CDVC pipeline", "DevOps culture", "Continuous integration", "Release on demand"], audience: "DevOps engineers, Release managers, Architects" },
   { id: "rte", code: "RTE", title: "SAFe Release Train Engineer", role: "Leadership", price: 1295, earlyBird: 1095, duration: "3 Days", seats: 12, available: 3, desc: "Become the chief Scrum Master of the Agile Release Train. Master ART facilitation, coaching, and continuous improvement.", outcomes: ["Facilitate PI Planning", "Coach the ART", "Drive relentless improvement", "Manage program risks"], audience: "Senior Scrum Masters, Program Managers, PMO leads" },
   { id: "spc", code: "SPC", title: "SAFe Program Consultant", role: "Leadership", price: 3995, earlyBird: 3495, duration: "4 Days", seats: 10, available: 2, desc: "The most comprehensive SAFe certification. Train and coach others in SAFe, lead transformations, and deliver SAFe training.", outcomes: ["Train all SAFe courses", "Lead transformations", "Launch ARTs", "Coach enterprise agility"], audience: "Consultants, Coaches, Senior change agents" },
@@ -840,9 +840,12 @@ const HomePage = ({ setPage, currency, setCurrency, toast }) => {
                   onClick={() => { setPage('register'); }}
                 >
                   {/* Header */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
                     <span style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 20, background: rc.bg, color: rc.color, letterSpacing: 0.5 }}>{cert.role}</span>
-                    <span style={{ fontSize: 11, fontWeight: 600, padding: '4px 10px', borderRadius: 20, background: '#F8FAFC', color: 'var(--slate)', border: '1px solid #E2E8F0' }}>{cert.duration}</span>
+                    <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                      {cert.aiPowered && <span style={{ fontSize: 10, fontWeight: 700, padding: '4px 8px', borderRadius: 20, background: 'linear-gradient(135deg,#6366F1,#8B5CF6)', color: 'white', letterSpacing: 0.5 }}>✦ AI-Powered</span>}
+                      <span style={{ fontSize: 11, fontWeight: 600, padding: '4px 10px', borderRadius: 20, background: '#F8FAFC', color: 'var(--slate)', border: '1px solid #E2E8F0' }}>{cert.duration}</span>
+                    </div>
                   </div>
 
                   {/* Title */}
@@ -1043,7 +1046,10 @@ const CertificationsPage = ({ setPage, currency, setPreSelectedCert }) => {
               <div key={cert.id} className={`cert-card ${expanded === cert.id ? 'selected' : ''}`} onClick={() => setExpanded(expanded === cert.id ? null : cert.id)}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
                   <span className="badge badge-navy">{cert.code}</span>
-                  <span className="badge badge-gold">{cert.duration}</span>
+                  <div style={{ display: 'flex', gap: 6 }}>
+                    {cert.aiPowered && <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 20, background: 'linear-gradient(135deg,#6366F1,#8B5CF6)', color: 'white' }}>✦ AI-Powered</span>}
+                    <span className="badge badge-gold">{cert.duration}</span>
+                  </div>
                 </div>
                 <div className="cert-code">{cert.role}</div>
                 <div className="cert-title">{cert.title}</div>

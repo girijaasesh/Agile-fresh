@@ -10,9 +10,9 @@ const PaymentForm = dynamic(() => import('../../components/PaymentForm'), { ssr:
 
 const CERTIFICATIONS = [
   { id: 'sa',     code: 'SA',   title: 'SAFe Agilist',               role: 'Leadership',    price: 995,  earlyBird: 400,  duration: '2 Days', desc: 'Foundation certification for enterprise agile leaders. Lean-Agile mindset and enterprise-scale transformation.' },
-  { id: 'ssm',    code: 'SSM',  title: 'SAFe Scrum Master',          role: 'Scrum Master',  price: 895,  earlyBird: 350,  duration: '2 Days', desc: 'Become a skilled Scrum Master in a SAFe enterprise environment. Facilitation, coaching, servant leadership.' },
+  { id: 'ssm',    code: 'SSM',  title: 'SAFe Scrum Master',          role: 'Scrum Master',  price: 895,  earlyBird: 350,  duration: '2 Days', aiPowered: true, desc: 'Become a skilled Scrum Master in a SAFe enterprise environment. Facilitation, coaching, servant leadership.' },
   { id: 'sasm',   code: 'SASM', title: 'SAFe Advanced Scrum Master', role: 'Scrum Master',  price: 1095, earlyBird: 895,  duration: '2 Days', desc: 'Advanced coaching techniques. Master patterns, anti-patterns, and ART-level coaching.' },
-  { id: 'popm',   code: 'POPM', title: 'SAFe Product Owner/PM',      role: 'Product Owner', price: 995,  earlyBird: 795,  duration: '2 Days', desc: 'Master product ownership at scale. Vision, roadmaps, backlog prioritisation at enterprise scale.' },
+  { id: 'popm',   code: 'POPM', title: 'SAFe Product Owner/PM',      role: 'Product Owner', price: 995,  earlyBird: 795,  duration: '2 Days', aiPowered: true, desc: 'Master product ownership at scale. Vision, roadmaps, backlog prioritisation at enterprise scale.' },
   { id: 'devops', code: 'SDP',  title: 'SAFe DevOps',                role: 'Technical',     price: 995,  earlyBird: 795,  duration: '2 Days', desc: 'Implement DevOps and continuous delivery pipelines in SAFe. Accelerate value delivery through technical excellence.' },
   { id: 'rte',    code: 'RTE',  title: 'SAFe Release Train Engineer', role: 'Leadership',   price: 1295, earlyBird: 1095, duration: '3 Days', desc: 'Chief Scrum Master of the Agile Release Train. ART facilitation, coaching, and continuous improvement.' },
   { id: 'spc',    code: 'SPC',  title: 'SAFe Program Consultant',    role: 'Leadership',    price: 3995, earlyBird: 3495, duration: '4 Days', desc: 'The most comprehensive SAFe certification. Train others, lead transformations, deliver SAFe training at scale.' },
@@ -499,6 +499,7 @@ export default function QuickRegisterClient() {
               return (
                 <div className={`qr-price-card${recommended ? ' recommended' : ''}`} key={id}>
                   {recommended && <div className="qr-price-rec-badge">Most Popular</div>}
+                  {c.aiPowered && <div style={{ position: 'absolute', top: recommended ? 16 : -10, right: 14, fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: 'linear-gradient(135deg,#6366F1,#8B5CF6)', color: 'white' }}>✦ AI-Powered</div>}
                   <div className="qr-price-code">{c.code}</div>
                   <div className="qr-price-title">{c.title}</div>
                   <div className="qr-price-role">{c.role} · {c.duration}</div>
