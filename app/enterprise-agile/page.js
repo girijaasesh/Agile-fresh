@@ -85,7 +85,7 @@ export default function EnterpriseAgilePage() {
               { code: 'SASM', title: 'SAFe Advanced Scrum Master', role: 'Scrum Master',   color: SAGE,     desc: 'Advanced coaching techniques, patterns, anti-patterns, and ART-level coaching.' },
               { code: 'POPM', title: 'SAFe Product Owner/PM',      role: 'Product Owner',  color: PEACH,    aiPowered: true, desc: 'Master product ownership at scale — vision, roadmaps, and backlog prioritization.' },
               { code: 'SDP',  title: 'SAFe DevOps',                role: 'Technical',      color: LAVENDER, desc: 'Implement DevOps and continuous delivery pipelines to accelerate value delivery.' },
-            ].map(({ code, title, role, color, desc }, i) => (
+            ].map(({ code, title, role, color, aiPowered, desc }, i) => (
               <div key={code} style={{
                 padding: '24px 26px',
                 borderBottom: i < 4 ? `1px solid ${BORDER}` : 'none',
