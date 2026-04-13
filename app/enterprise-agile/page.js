@@ -73,7 +73,7 @@ export default function EnterpriseAgilePage() {
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 36, borderBottom: `1px solid ${BORDER}`, paddingBottom: 20 }}>
             <div>
               <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: SAGE, marginBottom: 10 }}>SAFe Certification Programs</div>
-              <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(24px, 2.5vw, 34px)', color: TEXT, margin: 0, letterSpacing: '-0.01em' }}>AI Powered SAFe Certifications</h2>
+              <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(24px, 2.5vw, 34px)', color: TEXT, margin: 0, letterSpacing: '-0.01em' }}>AI-Empowered SAFe Certifications</h2>
             </div>
             <a href="/quick-register" style={{ fontSize: 15, color: MUTED, textDecoration: 'none', borderBottom: `1px solid ${FAINT}`, paddingBottom: 1, whiteSpace: 'nowrap', flexShrink: 0 }}>View all & register →</a>
           </div>

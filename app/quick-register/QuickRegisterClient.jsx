@@ -485,7 +485,7 @@ export default function QuickRegisterClient() {
       <section className="qr-section qr-section-alt">
         <div className="qr-wrap">
           <div className="qr-lbl">Certifications</div>
-          <h2 className="qr-sec-title">Choose your AI Powered SAFe Certification</h2>
+          <h2 className="qr-sec-title">Choose your AI-Empowered SAFe Certification</h2>
           <p className="qr-sec-sub">All courses include SAFe® exam fee, digital badge, and 1-year membership. Register to view pricing.</p>
           <div className="qr-pricing-grid">
             {[
