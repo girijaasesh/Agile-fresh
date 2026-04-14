@@ -1,6 +1,6 @@
 'use client';
-import { useState, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useRef, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const CATEGORIES = [
   { value: 'agile', label: 'Agile Implementation' },
@@ -22,6 +22,7 @@ const EMPTY_FORM = { title: '', summary: '', content: '', cover_image_url: '', v
 
 export default function ArticlesClient({ articles: init }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const coverInputRef = useRef(null);
   const [articles, setArticles] = useState(init);
   const [view, setView] = useState('list'); // 'list' | 'edit'
@@ -31,6 +32,19 @@ export default function ArticlesClient({ articles: init }) {
   const [uploadingCover, setUploadingCover] = useState(false);
   const [toast, setToast] = useState('');
   const [previewMode, setPreviewMode] = useState(false);
+  const [linkedinConnected, setLinkedinConnected] = useState(null); // null=loading, true/false
+  const [liModal, setLiModal] = useState(null); // null or article
+  const [liText, setLiText] = useState('');
+  const [liPosting, setLiPosting] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/linkedin/status').then(r => r.json()).then(d => setLinkedinConnected(d.connected));
+    // Show toast if redirected from OAuth
+    const connected = searchParams.get('linkedin_connected');
+    const err = searchParams.get('linkedin_error');
+    if (connected) showToast('LinkedIn connected successfully ✓', false);
+    if (err) showToast(`LinkedIn error: ${err}`);
+  }, []);
 
   const showToast = (msg, isErr = true) => {
     setToast({ msg, isErr });
@@ -98,6 +112,31 @@ export default function ArticlesClient({ articles: init }) {
     } catch (e) { showToast(e.message); }
   };
 
+  const openLinkedinModal = (article) => {
+    const appUrl = 'https://www.optim-soln.com';
+    const articleUrl = `${appUrl}/articles/${article.slug}`;
+    setLiText(`${article.title}\n\n${article.summary || ''}\n\nRead more: ${articleUrl}`);
+    setLiModal(article);
+  };
+
+  const postToLinkedin = async () => {
+    if (!liModal) return;
+    setLiPosting(true);
+    try {
+      const res = await fetch('/api/linkedin/post', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ articleId: liModal.id, customText: liText }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Post failed');
+      setArticles(a => a.map(x => x.id === liModal.id ? { ...x, linkedin_posted_at: new Date().toISOString() } : x));
+      showToast('Posted to LinkedIn ✓', false);
+      setLiModal(null);
+    } catch (e) { showToast(e.message); }
+    finally { setLiPosting(false); }
+  };
+
   const published = articles.filter(a => a.is_published).length;
 
   return (
@@ -120,18 +159,61 @@ export default function ArticlesClient({ articles: init }) {
 
       <div style={{ padding: '32px', maxWidth: 1100, margin: '0 auto' }}>
 
+        {/* LinkedIn Modal */}
+        {liModal && (
+          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+            <div style={{ background: 'white', borderRadius: 16, padding: 32, width: '100%', maxWidth: 560, boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                <span style={{ fontSize: 18, fontWeight: 700, color: '#0B1629' }}>Share to LinkedIn</span>
+              </div>
+              <p style={{ fontSize: 13, color: '#64748B', marginBottom: 8 }}>Posting as Optimized Solutions company page. Edit the post text below:</p>
+              <textarea
+                value={liText}
+                onChange={e => setLiText(e.target.value)}
+                style={{ width: '100%', height: 180, padding: '10px 12px', border: '1px solid #E2E8F0', borderRadius: 8, fontSize: 14, lineHeight: 1.6, resize: 'vertical', boxSizing: 'border-box', fontFamily: 'Arial, sans-serif' }}
+              />
+              <div style={{ fontSize: 12, color: '#94A3B8', textAlign: 'right', marginBottom: 16 }}>{liText.length} chars</div>
+              <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+                <button onClick={() => setLiModal(null)} style={{ padding: '9px 20px', border: '1px solid #E2E8F0', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: 13, background: 'white' }}>
+                  Cancel
+                </button>
+                <button onClick={postToLinkedin} disabled={liPosting || !liText.trim()}
+                  style={{ padding: '9px 22px', border: 'none', borderRadius: 8, cursor: liPosting ? 'not-allowed' : 'pointer', fontWeight: 600, fontSize: 13, background: '#0A66C2', color: 'white', opacity: liPosting ? 0.7 : 1 }}>
+                  {liPosting ? 'Posting…' : 'Post to LinkedIn'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* LIST VIEW */}
         {view === 'list' && (
           <>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
               <div>
                 <h1 style={{ color: '#0B1629', margin: 0, fontSize: 26 }}>Articles</h1>
                 <p style={{ color: '#64748B', margin: '4px 0 0', fontSize: 14 }}>{published} published · {articles.length - published} drafts</p>
               </div>
-              <button onClick={openNew}
-                style={{ background: '#1E3A5F', color: 'white', border: 'none', padding: '10px 22px', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: 14 }}>
-                + New Article
-              </button>
+              <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                {linkedinConnected === false && (
+                  <a href="/api/linkedin/auth"
+                    style={{ fontSize: 13, padding: '8px 16px', background: '#EFF6FF', color: '#0A66C2', border: '1px solid #BFDBFE', borderRadius: 8, textDecoration: 'none', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    Connect LinkedIn
+                  </a>
+                )}
+                {linkedinConnected === true && (
+                  <span style={{ fontSize: 13, padding: '8px 14px', background: '#D1FAE5', color: '#065F46', borderRadius: 8, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    LinkedIn Connected
+                  </span>
+                )}
+                <button onClick={openNew}
+                  style={{ background: '#1E3A5F', color: 'white', border: 'none', padding: '10px 22px', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: 14 }}>
+                  + New Article
+                </button>
+              </div>
             </div>
 
             {articles.length === 0 ? (
@@ -166,7 +248,7 @@ export default function ArticlesClient({ articles: init }) {
                         <div style={{ fontSize: 12, color: '#94A3B8', marginTop: 2 }}>{a.summary?.slice(0, 100) || '—'}</div>
                       </div>
                       {/* Actions */}
-                      <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                      <div style={{ display: 'flex', gap: 8, flexShrink: 0, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
                         <button onClick={() => openEdit(a)}
                           style={{ fontSize: 12, padding: '6px 14px', border: '1px solid #E2E8F0', borderRadius: 6, cursor: 'pointer', background: 'white', fontWeight: 600 }}>
                           Edit
@@ -177,6 +259,14 @@ export default function ArticlesClient({ articles: init }) {
                             color: a.is_published ? '#92400E' : '#065F46' }}>
                           {a.is_published ? 'Unpublish' : 'Publish'}
                         </button>
+                        {linkedinConnected && a.is_published && (
+                          <button onClick={() => openLinkedinModal(a)}
+                            style={{ fontSize: 12, padding: '6px 14px', border: '1px solid #BFDBFE', borderRadius: 6, cursor: 'pointer', background: '#EFF6FF', color: '#0A66C2', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                            {a.linkedin_posted_at ? 'Repost' : 'Share'}
+                            {a.linkedin_posted_at && <span style={{ fontSize: 10, color: '#64748B', fontWeight: 400 }}>·posted</span>}
+                          </button>
+                        )}
                         <a href={`/articles/${a.slug}`} target="_blank" rel="noreferrer"
                           style={{ fontSize: 12, padding: '6px 14px', border: '1px solid #BBF7D0', borderRadius: 6, cursor: 'pointer', background: '#F0FDF4', color: '#065F46', textDecoration: 'none', fontWeight: 600 }}>
                           View ↗
