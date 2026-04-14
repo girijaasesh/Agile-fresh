@@ -3,10 +3,12 @@ import { NextResponse } from 'next/server';
 const { pool } = require('../../../../lib/db');
 
 export async function GET(req) {
-  const { searchParams } = new URL(req.url);
+  const reqUrl = new URL(req.url);
+  const { searchParams } = reqUrl;
   const code = searchParams.get('code');
   const error = searchParams.get('error');
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.optim-soln.com';
+  // Use the actual request origin so it always matches the domain being used
+  const appUrl = reqUrl.origin;
 
   if (error) {
     return NextResponse.redirect(`${appUrl}/admin/articles?linkedin_error=${encodeURIComponent(error)}`);
