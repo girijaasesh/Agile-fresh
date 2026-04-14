@@ -39,7 +39,17 @@ export async function POST(req) {
   const postText = customText?.trim() ||
     `${article.title}\n\n${article.summary || ''}\n\nRead more: ${articleUrl}`;
 
-  // Use LinkedIn Posts API (newer, more reliable for org posting)
+  // Step 1: get the authenticated member's person ID
+  const meRes = await fetch('https://api.linkedin.com/v2/me', {
+    headers: { Authorization: `Bearer ${access_token}` },
+  });
+  const meData = await meRes.json();
+  if (!meRes.ok) {
+    return Response.json({ error: `Could not verify LinkedIn identity: ${meData.message || meRes.status}` }, { status: 400 });
+  }
+  const personId = meData.id;
+
+  // Step 2: post as the organization (requires the authenticated member to be a page admin)
   const body = {
     author: `urn:li:organization:${companyId}`,
     commentary: postText,
@@ -78,9 +88,10 @@ export async function POST(req) {
   }
 
   const liData = await liRes.json().catch(() => ({}));
-  console.error('LinkedIn post failed:', liRes.status, liData);
+  console.error('LinkedIn post failed:', liRes.status, liData, 'personId:', personId, 'companyId:', companyId);
+  const errDetail = liData.message || liData.errorDetails || `LinkedIn error ${liRes.status}`;
   return Response.json(
-    { error: liData.message || liData.errorDetails || `LinkedIn error ${liRes.status}` },
+    { error: `${errDetail} (posting as org ${companyId}, member ${personId})` },
     { status: liRes.status }
   );
 }
