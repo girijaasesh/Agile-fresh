@@ -34,60 +34,53 @@ export async function POST(req) {
     return Response.json({ error: 'LinkedIn token expired. Please reconnect LinkedIn.' }, { status: 400 });
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.optim-soln.com';
-  const articleUrl = `${appUrl}/articles/${article.slug}`;
+  const articleUrl = `https://www.optim-soln.com/articles/${article.slug}`;
   const companyId = process.env.LINKEDIN_COMPANY_ID || '104213223';
-
   const postText = customText?.trim() ||
     `${article.title}\n\n${article.summary || ''}\n\nRead more: ${articleUrl}`;
 
+  // Use LinkedIn Posts API (newer, more reliable for org posting)
   const body = {
     author: `urn:li:organization:${companyId}`,
-    lifecycleState: 'PUBLISHED',
-    specificContent: {
-      'com.linkedin.ugc.ShareContent': {
-        shareCommentary: { text: postText },
-        shareMediaCategory: 'ARTICLE',
-        media: [
-          {
-            status: 'READY',
-            description: { text: article.summary || article.title },
-            originalUrl: articleUrl,
-            title: { text: article.title },
-          },
-        ],
+    commentary: postText,
+    visibility: 'PUBLIC',
+    distribution: {
+      feedDistribution: 'MAIN_FEED',
+      targetEntities: [],
+      thirdPartyDistributionChannels: [],
+    },
+    content: {
+      article: {
+        source: articleUrl,
+        title: article.title,
+        description: article.summary || '',
       },
     },
-    visibility: {
-      'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC',
-    },
+    lifecycleState: 'PUBLISHED',
+    isReshareDisabledByAuthor: false,
   };
 
-  const liRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
+  const liRes = await fetch('https://api.linkedin.com/rest/posts', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${access_token}`,
       'Content-Type': 'application/json',
+      'LinkedIn-Version': '202401',
       'X-Restli-Protocol-Version': '2.0.0',
     },
     body: JSON.stringify(body),
   });
 
-  const liData = await liRes.json();
-
-  if (!liRes.ok) {
-    console.error('LinkedIn post failed:', liData);
-    return Response.json(
-      { error: liData.message || liData.errorDetails || 'LinkedIn post failed' },
-      { status: liRes.status }
-    );
+  // Posts API returns 201 with empty body on success
+  if (liRes.status === 201) {
+    await pool.query('UPDATE articles SET linkedin_posted_at=NOW() WHERE id=$1', [articleId]);
+    return Response.json({ success: true });
   }
 
-  // Mark article as posted
-  await pool.query(
-    'UPDATE articles SET linkedin_posted_at=NOW() WHERE id=$1',
-    [articleId]
+  const liData = await liRes.json().catch(() => ({}));
+  console.error('LinkedIn post failed:', liRes.status, liData);
+  return Response.json(
+    { error: liData.message || liData.errorDetails || `LinkedIn error ${liRes.status}` },
+    { status: liRes.status }
   );
-
-  return Response.json({ success: true, postId: liData.id });
 }
