@@ -9,6 +9,7 @@ const CATEGORIES = [
   { value: 'kanban', label: 'Kanban' },
   { value: 'safe', label: 'SAFe' },
   { value: 'agile-leadership', label: 'Agile Leadership' },
+  { value: 'ai-agile', label: 'AI in Agile' },
 ];
 
 const CAT_COLORS = {
@@ -17,6 +18,7 @@ const CAT_COLORS = {
   kanban:     { bg: '#FEF3C7', color: '#92400E' },
   safe:       { bg: '#F3E8FF', color: '#6B21A8' },
   'agile-leadership': { bg: '#FEE2E2', color: '#991B1B' },
+  'ai-agile':         { bg: '#ECFDF5', color: '#065F46' },
 };
 
 function fmtDate(d) {
