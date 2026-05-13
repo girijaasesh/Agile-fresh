@@ -532,6 +532,9 @@ export default function QuickRegisterClient() {
                   <button className="btn btn-gold qr-price-btn" onClick={() => { setForm(f => ({ ...f, certId: id })); scrollToForm(); }}>
                     {authStatus === 'authenticated' ? 'Select & Register →' : 'Register for Details →'}
                   </button>
+                  <a href={`/certifications/${id}`} style={{ display: 'block', textAlign: 'center', marginTop: 10, fontSize: 13, color: 'var(--navy)', fontWeight: 600, textDecoration: 'none', opacity: .7 }}>
+                    View Course Details →
+                  </a>
                 </div>
               );
             })}
@@ -577,6 +580,9 @@ export default function QuickRegisterClient() {
                   <button className="btn btn-gold qr-price-btn" onClick={() => { setForm(f => ({ ...f, certId: id })); scrollToForm(); }}>
                     {authStatus === 'authenticated' ? 'Select & Register →' : 'Register for Details →'}
                   </button>
+                  <a href={`/certifications/${id}`} style={{ display: 'block', textAlign: 'center', marginTop: 10, fontSize: 13, color: 'var(--navy)', fontWeight: 600, textDecoration: 'none', opacity: .7 }}>
+                    View Course Details →
+                  </a>
                 </div>
               );
             })}
