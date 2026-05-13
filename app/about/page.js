@@ -43,7 +43,7 @@ const EXPERIENCE = [
   {
     role: 'Senior Agile Coach & RTE',
     org: 'Optimized Solutions / PBGC',
-    period: 'Nov 2024 – Apr 2025',
+    period: '',
     points: [
       'Coached federal agency teams through SAFe transformation and ART standup',
       'Facilitated PI Planning events, ART syncs, and System Demos',
@@ -54,7 +54,7 @@ const EXPERIENCE = [
   {
     role: 'SAFe Program Consultant & Agile Coach',
     org: 'Enterprise Client Engagements',
-    period: 'Prior Experience',
+    period: '',
     points: [
       'Led SAFe transformations for Fortune 500 organizations across financial services, healthcare, and government sectors',
       'Coached 20+ Agile teams and multiple ARTs simultaneously toward high performance',
@@ -140,8 +140,7 @@ export default function AboutPage() {
             {EXPERIENCE.map((exp) => (
               <div key={exp.role} style={{ display: 'flex', gap: 28, flexWrap: 'wrap' }}>
                 <div style={{ minWidth: 200, flexShrink: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: GOLD }}>{exp.period}</div>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: NAVY, marginTop: 4 }}>{exp.org}</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: NAVY }}>{exp.org}</div>
                 </div>
                 <div style={{ flex: 1, minWidth: 260 }}>
                   <div style={{ fontSize: 17, fontWeight: 700, color: NAVY, marginBottom: 14 }}>{exp.role}</div>
