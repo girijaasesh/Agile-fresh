@@ -65,7 +65,7 @@ const TESTIMONIALS = [
 
 const ADMIN_STATS = { totalReg: 847, revenue: 623450, upcomingCourses: 5, avgSeatFill: 74 };
 
-const CURRENCIES = { USD: { symbol: "$", rate: 1 }, EUR: { symbol: "€", rate: 0.92 }, GBP: { symbol: "£", rate: 0.79 }, INR: { symbol: "₹", rate: 83.5 }, CAD: { symbol: "C$", rate: 1.37 }, AUD: { symbol: "A$", rate: 1.54 } };
+const CURRENCIES = { USD: { symbol: "$", rate: 1 }, EUR: { symbol: "€", rate: 0.92 }, GBP: { symbol: "£", rate: 0.79 }, CAD: { symbol: "C$", rate: 1.37 }, AUD: { symbol: "A$", rate: 1.54 } };
 
 // ===================== HELPERS =====================
 const fmt = (price, currency = "USD") => {

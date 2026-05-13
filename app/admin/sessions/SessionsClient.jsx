@@ -219,9 +219,9 @@ export default function SessionsClient({ sessions: initialSessions }) {
                 >
                   <option value="EST">EST (Eastern Standard Time)</option>
                   <option value="CST">CST (Central Standard Time)</option>
+                  <option value="MST">MST (Mountain Standard Time)</option>
                   <option value="PST">PST (Pacific Standard Time)</option>
                   <option value="GMT">GMT (Greenwich Mean Time)</option>
-                  <option value="IST">IST (Indian Standard Time)</option>
                 </select>
               </div>
 
