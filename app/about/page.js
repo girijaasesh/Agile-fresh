@@ -246,11 +246,6 @@ export default function AboutPage() {
                 <p style={{ fontSize: 15, color: MUTED, lineHeight: 1.8, marginBottom: 28 }}>
                   She founded Optimized Solutions to bridge the gap between certification and real-world implementation, bringing practitioner-grade insight to every training course and coaching engagement the firm delivers.
                 </p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                  {CERTS.map(c => (
-                    <span key={c} style={{ fontSize: 12, fontWeight: 700, color: MUTED, border: `1px solid ${BORDER}`, background: BG, padding: '5px 12px', borderRadius: 20, letterSpacing: '0.04em' }}>{c}</span>
-                  ))}
-                </div>
               </div>
             </div>
           </Reveal>
