@@ -874,6 +874,9 @@ const HomePage = ({ setPage, currency, setCurrency, toast }) => {
                         : <span style={{ fontStyle: 'italic' }}>Register for details</span>
                       }
                     </div>
+                    <a href={`/certifications/${cert.id}`} className="btn btn-outline-navy btn-sm" onClick={e => e.stopPropagation()} style={{ textDecoration: 'none' }}>
+                      Learn More
+                    </a>
                     <button
                       className="btn btn-primary btn-sm"
                       onClick={e => { e.stopPropagation(); setPage('register'); }}
@@ -1041,6 +1044,55 @@ const CertificationsPage = ({ setPage, currency, setPreSelectedCert }) => {
               <button key={r} className={`btn btn-sm ${roleFilter === r ? 'btn-primary' : 'btn-outline-navy'}`} onClick={() => setRoleFilter(r)}>{r}</button>
             ))}
           </div>
+
+          {/* What's Included — common to all certifications */}
+          <div style={{ background: 'white', borderRadius: 16, border: '1px solid #E2E8F0', padding: '40px 40px 32px', marginBottom: 40 }}>
+            <div style={{ textAlign: 'center', marginBottom: 36 }}>
+              <div className="section-label">Every Certification Includes</div>
+              <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: 24, color: 'var(--navy)', fontWeight: 600 }}>What You Get With Every Program</h2>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '28px 32px' }}>
+              {[
+                {
+                  icon: 'users',
+                  label: <>Live <strong>Instructor-Led</strong> Training</>,
+                },
+                {
+                  icon: 'book',
+                  label: <>Earn <strong>PDUs and SEUs</strong> for Continual Learning</>,
+                },
+                {
+                  icon: 'cert2',
+                  label: <>Free 1-Year <strong>SAFe Community</strong> Membership</>,
+                },
+                {
+                  icon: 'check',
+                  label: <>Unlock Exam Success with Comprehensive <strong>Exam Support</strong></>,
+                },
+                {
+                  icon: 'cert',
+                  label: <><strong>All-Inclusive</strong> Learning: Exam Fee Included</>,
+                },
+                {
+                  icon: 'globe',
+                  label: <>Embrace the SAFe Way with Access to the <strong>SAFe Studio</strong></>,
+                },
+              ].map(({ icon, label }, i) => (
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 14 }}>
+                  <div style={{ position: 'relative', width: 52, height: 52, flexShrink: 0 }}>
+                    <div style={{ position: 'absolute', bottom: -4, right: -4, width: 28, height: 28, borderRadius: '50%', background: '#F5EFE6', opacity: 0.8 }} />
+                    <div style={{ position: 'relative', width: 48, height: 48, borderRadius: 12, background: '#EBF5EE', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2D7A4F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d={({ users: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75", book: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15z", cert2: "M9 12l2 2 4-4M7 10h.01M12 2a10 10 0 1 0 0 20", check: "M20 6L9 17l-5-5", cert: "M12 15l-2 5 5-3 5 3-2-5M12 2a10 10 0 1 0 0 20", globe: "M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zM2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" })[icon]} />
+                      </svg>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 15, color: 'var(--navy)', lineHeight: 1.5 }}>{label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div className="grid-2">
             {filtered.map(cert => (
               <div key={cert.id} className={`cert-card ${expanded === cert.id ? 'selected' : ''}`} onClick={() => setExpanded(expanded === cert.id ? null : cert.id)}>
@@ -1088,6 +1140,9 @@ const CertificationsPage = ({ setPage, currency, setPreSelectedCert }) => {
                     <button className="btn btn-outline-navy btn-sm" onClick={(e) => { e.stopPropagation(); setExpanded(expanded === cert.id ? null : cert.id); }}>
                       {expanded === cert.id ? 'Less ↑' : 'Details ↓'}
                     </button>
+                    <a href={`/certifications/${cert.id}`} className="btn btn-outline-navy btn-sm" onClick={e => e.stopPropagation()} style={{ textDecoration: 'none' }}>
+                      Learn More
+                    </a>
                     <button className="btn btn-primary btn-sm" onClick={(e) => { e.stopPropagation(); setPreSelectedCert(cert.id); setPage('register'); }}>
                       Register →
                     </button>
