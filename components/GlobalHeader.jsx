@@ -10,6 +10,7 @@ const BANNER_H = 40;
 const LINKS = [
   { label: 'Home',           href: '/' },
   { label: 'Certifications', href: '/quick-register' },
+  { label: 'About',          href: '/about' },
   { label: 'Corporate',      href: '/#contact' },
   { label: 'Knowledge Hub',  href: '/articles' },
 ];
