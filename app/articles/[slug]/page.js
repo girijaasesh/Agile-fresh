@@ -115,6 +115,17 @@ export default async function ArticlePage({ params }) {
         <div style={{ background: 'white', borderRadius: 16, padding: '40px 48px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', marginBottom: 40 }}>
           {renderContent(article.content)}
 
+          {/* Author signature */}
+          <div style={{ marginTop: 40, paddingTop: 24, borderTop: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{ width: 40, height: 40, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, border: '2px solid #E2E8F0' }}>
+              <img src="/girijaa-photo.png" alt="GS" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
+            </div>
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#0B1629' }}>Girijaa Seshachala</div>
+              <div style={{ fontSize: 13, color: '#94A3B8' }}>Founder, Optimized Solutions · SAFe SPC · Leading Agilist · PMP</div>
+            </div>
+          </div>
+
           {/* Embedded video */}
           {article.video_url && (
             <div style={{ marginTop: 40 }}>
