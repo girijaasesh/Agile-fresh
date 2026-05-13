@@ -56,7 +56,7 @@ const PILLARS = [
   },
 ];
 
-const CERTS = ['SAFe SPC 6.0', 'RTE', 'PMP', 'CSM', 'POPM', 'SSM', 'SA', 'SASM'];
+const CERTS = ['SAFe SPC 6.0', 'Leading Agilist', 'PMP', 'CSM', 'POPM', 'SSM', 'SA', 'SASM'];
 
 /* ── Scroll-reveal hook ──────────────────────────────── */
 function useReveal(threshold = 0.12) {
@@ -238,7 +238,7 @@ export default function AboutPage() {
               <div>
                 <div style={{ fontFamily: 'Georgia, serif', fontSize: 26, fontWeight: 700, color: TEXT, marginBottom: 4 }}>Girijaa Seshachala</div>
                 <div style={{ fontSize: 12, fontWeight: 700, color: GOLD, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 20 }}>
-                  Founder · SAFe SPC · RTE · PMP · CSM
+                  Founder · SAFe SPC · Leading Agilist · PMP · CSM
                 </div>
                 <p style={{ fontSize: 15, color: MUTED, lineHeight: 1.8, marginBottom: 16 }}>
                   Girijaa is a Senior Agile Coach and SAFe Program Consultant with over 15 years of experience helping organizations navigate complex transformations — from federal government agencies to Fortune 500 enterprises across financial services, healthcare, and technology.
