@@ -25,8 +25,12 @@ async function ensureTables() {
   `);
 }
 
-/* ── Pick next article to send ──────────────────────────── */
-async function nextArticle() {
+/* ── Pick article to send (specific id or next unsent) ──── */
+async function pickArticle(articleId) {
+  if (articleId) {
+    const { rows } = await pool.query('SELECT * FROM articles WHERE id=$1 AND is_published=true', [articleId]);
+    return rows[0] || null;
+  }
   const { rows } = await pool.query(`
     SELECT * FROM articles
     WHERE is_published = true
@@ -148,20 +152,34 @@ function buildHtml({ name, article, unsubUrl }) {
 
 /* ── Main cron handler ──────────────────────────────────── */
 export async function GET(req) {
-  // Verify Vercel cron secret
+  // Verify admin cookie OR cron secret
   const auth = req.headers.get('authorization');
-  if (process.env.CRON_SECRET && auth !== `Bearer ${process.env.CRON_SECRET}`) {
-    return Response.json({ error: 'Unauthorized' }, { status: 401 });
+  const cronOk = process.env.CRON_SECRET ? auth === `Bearer ${process.env.CRON_SECRET}` : false;
+
+  if (!cronOk) {
+    // Fall back to admin cookie check
+    const { cookies } = await import('next/headers');
+    const { getServerSession } = await import('next-auth/next');
+    const { authOptions } = await import('../../auth/[...nextauth]/route');
+    const cookieStore = cookies();
+    const hasAdminToken = !!cookieStore.get('admin_token');
+    const session = await getServerSession(authOptions);
+    if (!hasAdminToken && !session?.user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
   }
 
   if (!RESEND_KEY) {
     return Response.json({ error: 'RESEND_API_KEY not configured' }, { status: 500 });
   }
 
+  const { searchParams } = new URL(req.url);
+  const articleId = searchParams.get('article_id') || null;
+
   try {
     await ensureTables();
 
-    const article = await nextArticle();
+    const article = await pickArticle(articleId);
     if (!article) {
       return Response.json({ ok: true, message: 'No new articles to send — all caught up.' });
     }

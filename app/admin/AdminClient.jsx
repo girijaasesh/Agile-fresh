@@ -47,6 +47,7 @@ export default function AdminClient() {
               { label: '🎟️ Manage Coupons', path: '/admin/coupons' },
               { label: '📚 Course Materials', path: '/admin/materials' },
               { label: '✍️ Articles', path: '/admin/articles' },
+              { label: '📧 Newsletter', path: '/admin/newsletter' },
               { label: '⏳ View Waitlist', path: '/admin/waitlist' },
               { label: '🎓 Certificates', path: '/admin/certificates' },
               { label: '🔗 Quick Links', path: '/admin/quicklinks' },
