@@ -81,7 +81,7 @@ export default function FounderStrip() {
             <div style={{ width: 40, height: 1, background: 'rgba(201,151,58,0.35)', marginBottom: 22 }} />
 
             <p style={{ fontSize: 16, lineHeight: 1.82, color: 'rgba(247,244,239,0.76)', maxWidth: 520, marginBottom: 36 }}>
-              After 20 years guiding enterprises through Agile transformations across industries, I founded Optimized Solutions with one conviction: most transformations stall not because of bad frameworks — but because of misaligned strategy, siloed execution, and governance that was never designed for flow. I built this to fix that. Every engagement I lead is hands-on, outcome-obsessed, and built around your reality — not a textbook case study.
+              After guiding enterprises through Agile transformations across industries, I founded Optimized Solutions with one conviction: most transformations stall not because of bad frameworks — but because of misaligned strategy, siloed execution, and governance that was never designed for flow. I built this to fix that. Every engagement I lead is hands-on, outcome-obsessed, and built around your reality — not a textbook case study.
             </p>
 
             <a
