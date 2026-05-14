@@ -84,15 +84,12 @@ function buildHtml({ name, article, unsubUrl }) {
 
     <!-- Header -->
     <tr>
-      <td style="background:#1B2A4A;padding:28px 40px;">
+      <td style="background:#1B2A4A;padding:24px 40px;">
         <table width="100%" cellpadding="0" cellspacing="0">
           <tr>
             <td>
-              <div style="font-family:Georgia,serif;font-size:20px;font-weight:700;color:#FAFAF8;letter-spacing:-0.01em;">Optimized Solutions</div>
-              <div style="font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:4px;">Knowledge Hub</div>
-            </td>
-            <td align="right">
-              <div style="font-size:11px;color:rgba(255,255,255,0.35);font-weight:500;">Daily Insight</div>
+              <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;color:#FAFAF8;letter-spacing:-0.01em;">Optimized Solutions</div>
+              <div style="font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:3px;">Knowledge Hub · Daily Insight</div>
             </td>
           </tr>
         </table>
@@ -102,94 +99,41 @@ function buildHtml({ name, article, unsubUrl }) {
     <!-- Gold accent bar -->
     <tr><td style="height:3px;background:linear-gradient(90deg,#C9973A,#E0B55A);"></td></tr>
 
-    <!-- Greeting -->
+    <!-- Article content -->
     <tr>
-      <td style="padding:36px 40px 0;">
-        <p style="font-size:15px;color:#3D5A60;margin:0 0 24px;line-height:1.6;">
-          Hi${name ? ` <strong style="color:#111C20;">${name.split(' ')[0]}</strong>` : ''}, here's today's insight from Girijaa Seshachala.
+      <td style="padding:40px 40px 32px;">
+
+        ${article.cover_image_url ? `
+        <div style="margin:-40px -40px 32px;max-height:220px;overflow:hidden;">
+          <img src="${article.cover_image_url}" alt="${article.title}" width="100%" style="display:block;width:100%;object-fit:cover;max-height:220px;">
+        </div>` : ''}
+
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#C9973A;margin-bottom:12px;">${readMin} min read</div>
+
+        <h1 style="font-family:Georgia,serif;font-size:26px;font-weight:700;color:#111C20;margin:0 0 16px;line-height:1.2;letter-spacing:-0.01em;">
+          ${article.title}
+        </h1>
+
+        ${article.summary ? `<p style="font-size:16px;color:#5A7880;line-height:1.7;margin:0 0 24px;font-style:italic;">${article.summary}</p>` : ''}
+
+        <p style="font-size:15px;color:#374151;line-height:1.8;margin:0 0 32px;">
+          ${teaser}
         </p>
-      </td>
-    </tr>
 
-    <!-- Article card -->
-    <tr>
-      <td style="padding:0 40px 32px;">
-        <table width="100%" cellpadding="0" cellspacing="0" style="background:#F7F6F2;border-radius:6px;border:1px solid #E2E8F0;overflow:hidden;">
-          ${article.cover_image_url ? `
-          <tr>
-            <td style="padding:0;">
-              <img src="${article.cover_image_url}" alt="${article.title}" width="100%" style="display:block;max-height:240px;object-fit:cover;width:100%;">
-            </td>
-          </tr>` : ''}
-          <tr>
-            <td style="padding:28px 28px 24px;">
-              <div style="font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#C9973A;margin-bottom:10px;">
-                ${readMin} min read
-              </div>
-              <h2 style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#111C20;margin:0 0 14px;line-height:1.25;letter-spacing:-0.01em;">
-                ${article.title}
-              </h2>
-              <p style="font-size:15px;color:#3D5A60;line-height:1.75;margin:0 0 24px;">
-                ${teaser}
-              </p>
-              <a href="${articleUrl}"
-                 style="display:inline-block;background:#1B2A4A;color:#FAFAF8;text-decoration:none;font-weight:700;font-size:14px;padding:12px 28px;border-radius:4px;letter-spacing:0.01em;">
-                Read the full article →
-              </a>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
+        <a href="${articleUrl}"
+           style="display:inline-block;background:#1B2A4A;color:#FAFAF8;text-decoration:none;font-weight:700;font-size:14px;padding:13px 30px;border-radius:4px;">
+          Read the full article →
+        </a>
 
-    <!-- Author signature -->
-    <tr>
-      <td style="padding:0 40px 32px;">
-        <table cellpadding="0" cellspacing="0">
-          <tr>
-            <td style="padding-right:14px;vertical-align:middle;">
-              <img src="${APP_URL}/girijaa-photo.png" alt="Girijaa Seshachala" width="44" height="44"
-                   style="border-radius:50%;object-fit:cover;object-position:top;display:block;border:2px solid #E2E8F0;">
-            </td>
-            <td style="vertical-align:middle;">
-              <div style="font-size:14px;font-weight:700;color:#111C20;">Girijaa Seshachala</div>
-              <div style="font-size:12px;color:#5A7880;margin-top:2px;">Founder, Optimized Solutions · SAFe SPC · Leading Agilist · PMP</div>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-
-    <!-- Divider -->
-    <tr><td style="padding:0 40px;"><div style="height:1px;background:#E2E8F0;"></div></td></tr>
-
-    <!-- CTA row -->
-    <tr>
-      <td style="padding:24px 40px;">
-        <table width="100%" cellpadding="0" cellspacing="0">
-          <tr>
-            <td>
-              <div style="font-size:13px;font-weight:700;color:#111C20;margin-bottom:6px;">Ready to put this into practice?</div>
-              <div style="font-size:13px;color:#5A7880;">Browse our upcoming SAFe certification courses.</div>
-            </td>
-            <td align="right" style="vertical-align:middle;">
-              <a href="${APP_URL}/quick-register"
-                 style="display:inline-block;background:#C9973A;color:#FFFFFF;text-decoration:none;font-weight:700;font-size:13px;padding:10px 22px;border-radius:4px;white-space:nowrap;">
-                View Courses →
-              </a>
-            </td>
-          </tr>
-        </table>
       </td>
     </tr>
 
     <!-- Footer -->
     <tr>
       <td style="background:#F7F6F2;padding:20px 40px;border-top:1px solid #E2E8F0;">
-        <p style="font-size:11px;color:#94A3B8;margin:0;text-align:center;line-height:1.7;">
+        <p style="font-size:11px;color:#94A3B8;margin:0;text-align:center;line-height:1.8;">
           © ${new Date().getFullYear()} Optimized Solutions ·
           <a href="${APP_URL}" style="color:#C9973A;text-decoration:none;">optim-soln.com</a><br>
-          You're receiving this because you're part of the Optimized Solutions community.<br>
           <a href="${unsubUrl}" style="color:#94A3B8;">Unsubscribe</a>
         </p>
       </td>
