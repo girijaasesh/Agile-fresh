@@ -9,7 +9,15 @@
  *   node extract-urls.js --format=txt   # one URL per line (default)
  */
 
-require('dotenv').config({ path: '.env.local' });
+// Load DATABASE_URL from .env.local if not already set
+if (!process.env.DATABASE_URL) {
+  const fs = require('fs');
+  try {
+    const env = fs.readFileSync('.env.local', 'utf8');
+    const match = env.match(/^DATABASE_URL=(.+)$/m);
+    if (match) process.env.DATABASE_URL = match[1].trim();
+  } catch {}
+}
 const { Pool } = require('pg');
 
 const BASE_URL = 'https://www.optim-soln.com';
@@ -21,7 +29,7 @@ async function main() {
   const { rows } = await pool.query(`
     SELECT slug, published_at, updated_at
     FROM articles
-    WHERE status = 'published'
+    WHERE is_published = true
     ORDER BY published_at DESC
   `);
 
