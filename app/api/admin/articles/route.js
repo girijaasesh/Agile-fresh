@@ -24,22 +24,22 @@ export async function GET() {
 
 export async function POST(req) {
   const deny = await checkAdmin(); if (deny) return deny;
-  const { title, summary, content, cover_image_url, video_url, category, tags, is_published } = await req.json();
+  const { title, summary, content, cover_image_url, video_url, category, tags, is_published, post_on_linkedin } = await req.json();
   if (!title) return Response.json({ error: 'Title is required' }, { status: 400 });
   const slug = makeSlug(title);
   const published_at = is_published ? new Date().toISOString() : null;
   const result = await pool.query(
-    `INSERT INTO articles (title, slug, summary, content, cover_image_url, video_url, category, tags, is_published, published_at)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *`,
+    `INSERT INTO articles (title, slug, summary, content, cover_image_url, video_url, category, tags, is_published, published_at, post_on_linkedin)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *`,
     [title, slug, summary || '', content || '', cover_image_url || null, video_url || null,
-     category || 'agile', tags || '', is_published ?? false, published_at]
+     category || 'agile', tags || '', is_published ?? false, published_at, post_on_linkedin ?? false]
   );
   return Response.json(result.rows[0], { status: 201 });
 }
 
 export async function PATCH(req) {
   const deny = await checkAdmin(); if (deny) return deny;
-  const { id, title, summary, content, cover_image_url, video_url, category, tags, is_published } = await req.json();
+  const { id, title, summary, content, cover_image_url, video_url, category, tags, is_published, post_on_linkedin } = await req.json();
   if (!id) return Response.json({ error: 'Missing id' }, { status: 400 });
   const published_at_sql = is_published
     ? `CASE WHEN is_published = false THEN NOW() ELSE published_at END`
@@ -49,10 +49,11 @@ export async function PATCH(req) {
        title=$1, summary=$2, content=$3, cover_image_url=$4, video_url=$5,
        category=$6, tags=$7, is_published=$8,
        published_at=${published_at_sql},
+       post_on_linkedin=$10,
        updated_at=NOW()
      WHERE id=$9 RETURNING *`,
     [title, summary || '', content || '', cover_image_url || null, video_url || null,
-     category || 'agile', tags || '', is_published ?? false, id]
+     category || 'agile', tags || '', is_published ?? false, id, post_on_linkedin ?? false]
   );
   return Response.json(result.rows[0]);
 }

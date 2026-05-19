@@ -18,7 +18,7 @@ const CAT_COLORS = {
   leadership: { bg: '#FEE2E2', color: '#991B1B' },
 };
 
-const EMPTY_FORM = { title: '', summary: '', content: '', cover_image_url: '', video_url: '', category: 'agile', tags: '', is_published: false };
+const EMPTY_FORM = { title: '', summary: '', content: '', cover_image_url: '', video_url: '', category: 'agile', tags: '', is_published: false, post_on_linkedin: false };
 
 export default function ArticlesClient({ articles: init }) {
   const router = useRouter();
@@ -100,6 +100,19 @@ export default function ArticlesClient({ articles: init }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setArticles(a => a.map(x => x.id === data.id ? data : x));
+    } catch (e) { showToast(e.message); }
+  };
+
+  const toggleLinkedinQueue = async (article) => {
+    try {
+      const res = await fetch('/api/admin/articles', {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: article.id, ...article, post_on_linkedin: !article.post_on_linkedin }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setArticles(a => a.map(x => x.id === data.id ? data : x));
+      showToast(data.post_on_linkedin ? 'LinkedIn Post link turned ON ✓' : 'LinkedIn Post link turned OFF', false);
     } catch (e) { showToast(e.message); }
   };
 
@@ -236,13 +249,29 @@ export default function ArticlesClient({ articles: init }) {
                       </div>
                       {/* Info */}
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
                           <span style={{ background: cat.bg, color: cat.color, padding: '2px 8px', borderRadius: 4, fontSize: 11, fontWeight: 700 }}>
                             {CATEGORIES.find(c => c.value === a.category)?.label || a.category}
                           </span>
                           <span style={{ background: a.is_published ? '#D1FAE5' : '#FEF3C7', color: a.is_published ? '#065F46' : '#92400E', padding: '2px 8px', borderRadius: 4, fontSize: 11, fontWeight: 700 }}>
                             {a.is_published ? '● Published' : '○ Draft'}
                           </span>
+                          <button
+                            onClick={() => toggleLinkedinQueue(a)}
+                            title={a.post_on_linkedin ? 'ON — Zapier will post this to LinkedIn. Click to turn off.' : 'OFF — Click to tag this article for LinkedIn posting via Zapier.'}
+                            style={{
+                              display: 'inline-flex', alignItems: 'center', gap: 4,
+                              padding: '2px 8px', borderRadius: 4, fontSize: 11, fontWeight: 700,
+                              border: 'none', cursor: 'pointer',
+                              background: a.post_on_linkedin ? '#0A66C2' : '#F1F5F9',
+                              color: a.post_on_linkedin ? 'white' : '#94A3B8',
+                              transition: 'background 0.15s',
+                            }}>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill={a.post_on_linkedin ? 'white' : '#94A3B8'}>
+                              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                            LinkedIn Post link
+                          </button>
                         </div>
                         <div style={{ fontSize: 15, fontWeight: 700, color: '#1E3A5F', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{a.title}</div>
                         <div style={{ fontSize: 12, color: '#94A3B8', marginTop: 2 }}>{a.summary?.slice(0, 100) || '—'}</div>
@@ -356,6 +385,20 @@ export default function ArticlesClient({ articles: init }) {
                         {form.is_published ? '● Published' : '○ Save as Draft'}
                       </label>
                     </div>
+                  </div>
+
+                  {/* LinkedIn Post link */}
+                  <div style={{ background: 'white', borderRadius: 12, padding: 20, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                    <label style={lbl}>LinkedIn Post link</label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', background: form.post_on_linkedin ? '#EFF6FF' : '#F1F5F9', borderRadius: 8, border: form.post_on_linkedin ? '1px solid #0A66C2' : '1px solid transparent' }}>
+                      <input type="checkbox" id="liqueue" checked={form.post_on_linkedin} onChange={e => setForm(f => ({ ...f, post_on_linkedin: e.target.checked }))}
+                        style={{ width: 18, height: 18, cursor: 'pointer', accentColor: '#0A66C2' }} />
+                      <label htmlFor="liqueue" style={{ fontWeight: 700, fontSize: 14, color: form.post_on_linkedin ? '#0A66C2' : '#64748B', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill={form.post_on_linkedin ? '#0A66C2' : '#94A3B8'}><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        {form.post_on_linkedin ? 'LinkedIn Post link — ON' : 'LinkedIn Post link — OFF'}
+                      </label>
+                    </div>
+                    <p style={{ fontSize: 11, color: '#94A3B8', margin: '8px 0 0' }}>When ON, Zapier picks up this article and posts it to LinkedIn.</p>
                   </div>
 
                   {/* Category & Tags */}
