@@ -87,11 +87,17 @@ export default async function ArticlePage({ params }) {
       <div style={{ maxWidth: 820, margin: '0 auto', padding: '48px 24px' }}>
         {/* Article header */}
         <div style={{ marginBottom: 32 }}>
-          <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+          <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
             <Link href={`/articles?category=${article.category}`}
               style={{ background: cat.bg, color: cat.color, padding: '4px 12px', borderRadius: 4, fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>
               {catLabel}
             </Link>
+            {article.post_on_linkedin && (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#EFF6FF', color: '#0A66C2', padding: '4px 10px', borderRadius: 4, fontSize: 12, fontWeight: 700 }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                LinkedIn Post link
+              </span>
+            )}
           </div>
           <h1 style={{ fontSize: 38, fontWeight: 800, color: '#0B1629', margin: '0 0 16px', lineHeight: 1.25, fontFamily: 'Playfair Display, serif' }}>
             {article.title}

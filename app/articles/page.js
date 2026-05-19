@@ -199,11 +199,17 @@ export default function ArticlesPage() {
                     : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 64 }}>📝</div>}
                 </div>
                 <div className="art-featured-body" style={{ padding: 40, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                  <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+                  <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
                     <span style={{ background: '#C9A84C', color: '#1E3A5F', padding: '3px 10px', borderRadius: 4, fontSize: 11, fontWeight: 800, textTransform: 'uppercase' }}>Featured</span>
                     <span style={{ ...(CAT_COLORS[featured.category] || CAT_COLORS.agile), padding: '3px 10px', borderRadius: 4, fontSize: 11, fontWeight: 700 }}>
                       {CATEGORIES.find(c => c.value === featured.category)?.label}
                     </span>
+                    {featured.post_on_linkedin && (
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#EFF6FF', color: '#0A66C2', padding: '3px 8px', borderRadius: 4, fontSize: 11, fontWeight: 700 }}>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        LinkedIn Post link
+                      </span>
+                    )}
                   </div>
                   <h2 style={{ fontSize: 26, fontWeight: 800, color: '#0B1629', margin: '0 0 12px', lineHeight: 1.3 }}>{featured.title}</h2>
                   <p style={{ fontSize: 15, color: '#64748B', margin: '0 0 20px', lineHeight: 1.7 }}>{featured.summary}</p>
@@ -228,8 +234,16 @@ export default function ArticlesPage() {
                         : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>📝</div>}
                     </div>
                     <div style={{ padding: 20 }}>
-                      <span style={{ background: cat.bg, color: cat.color, padding: '3px 10px', borderRadius: 4, fontSize: 11, fontWeight: 700 }}>{catLabel}</span>
-                      <h3 style={{ fontSize: 17, fontWeight: 700, color: '#0B1629', margin: '10px 0 8px', lineHeight: 1.4 }}>{a.title}</h3>
+                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center', marginBottom: 10 }}>
+                        <span style={{ background: cat.bg, color: cat.color, padding: '3px 10px', borderRadius: 4, fontSize: 11, fontWeight: 700 }}>{catLabel}</span>
+                        {a.post_on_linkedin && (
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#EFF6FF', color: '#0A66C2', padding: '3px 8px', borderRadius: 4, fontSize: 11, fontWeight: 700 }}>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                            LinkedIn Post link
+                          </span>
+                        )}
+                      </div>
+                      <h3 style={{ fontSize: 17, fontWeight: 700, color: '#0B1629', margin: '0 0 8px', lineHeight: 1.4 }}>{a.title}</h3>
                       <p style={{ fontSize: 13, color: '#64748B', margin: '0 0 16px', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                         {a.summary}
                       </p>
