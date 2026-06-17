@@ -124,7 +124,7 @@ export default function GlobalHeader() {
             }}>
               Let's Talk
             </a>
-            <a href="tel:2272921497" style={{
+            <a href="tel:2272921497" title="Call us at (227) 292-1497" style={{
               marginLeft: 8,
               background: '#667eea', color: '#fff',
               padding: '9px 16px', fontSize: 13, fontWeight: 600,

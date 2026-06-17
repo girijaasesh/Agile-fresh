@@ -25,6 +25,16 @@
   margin: 0;
 }
 
+.phoneLink {
+  color: #667eea;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.phoneLink:hover {
+  text-decoration: underline;
+}
+
 .contactInfo {
   display: flex;
   gap: 12px;

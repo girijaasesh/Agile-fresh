@@ -35,7 +35,7 @@ export default function MessagesAdmin() {
         <div>
           <h1>Contact Messages</h1>
           <p className={styles.subtitle}>
-            {messages.length} message{messages.length !== 1 ? 's' : ''} received
+            {messages.length} message{messages.length !== 1 ? 's' : ''} received — Call us at <a href="tel:2272921497" className={styles.phoneLink}>(227) 292-1497</a>
           </p>
         </div>
         <div className={styles.contactInfo}>
