@@ -92,8 +92,8 @@ export default function MessengerWidget() {
             <div className={styles.modalHeader}>
               <div>
                 <h3>Get in Touch</h3>
-                <a href="tel:2272921497" className={styles.phoneLink}>
-                  📞 (227) 292-1497
+                <a href="tel:2272921497" className={styles.phoneButton}>
+                  📞 +1 (227) 292-1497
                 </a>
               </div>
               <button
