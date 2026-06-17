@@ -90,7 +90,12 @@ export default function MessengerWidget() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className={styles.modalHeader}>
-              <h3>Get in Touch</h3>
+              <div>
+                <h3>Get in Touch</h3>
+                <a href="tel:2272921497" className={styles.phoneLink}>
+                  📞 (227) 292-1497
+                </a>
+              </div>
               <button
                 className={styles.closeButton}
                 onClick={() => setIsOpen(false)}

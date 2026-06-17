@@ -4,6 +4,14 @@
   padding: 40px 20px;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  gap: 20px;
+}
+
 .container h1 {
   font-size: 32px;
   font-weight: 700;
@@ -14,7 +22,29 @@
 .subtitle {
   font-size: 14px;
   color: #6b7280;
-  margin-bottom: 32px;
+  margin: 0;
+}
+
+.contactInfo {
+  display: flex;
+  gap: 12px;
+}
+
+.phoneButton {
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.phoneButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
 .error {

@@ -31,10 +31,19 @@ export default function MessagesAdmin() {
 
   return (
     <div className={styles.container}>
-      <h1>Contact Messages</h1>
-      <p className={styles.subtitle}>
-        {messages.length} message{messages.length !== 1 ? 's' : ''} received
-      </p>
+      <div className={styles.header}>
+        <div>
+          <h1>Contact Messages</h1>
+          <p className={styles.subtitle}>
+            {messages.length} message{messages.length !== 1 ? 's' : ''} received
+          </p>
+        </div>
+        <div className={styles.contactInfo}>
+          <a href="tel:2272921497" className={styles.phoneButton}>
+            📞 (227) 292-1497
+          </a>
+        </div>
+      </div>
 
       {error && <div className={styles.error}>{error}</div>}
 

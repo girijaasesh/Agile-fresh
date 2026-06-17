@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /Users/girijaseshachala/Documents/Agile-fresh remote -v)",
+      "Bash(awk '{print $9, $1, $2}')",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3003/)",
+      "Bash(git commit -m ':*)",
+      "Bash(git commit -m 'Fix aiPowered destructuring in enterprise-agile cert list:*)",
+      "Bash(sed -i '' 's/Work Email \\\\*/Email Address */g; s/'\\\\''Work Email'\\\\''/'\\\\''Email Address'\\\\''/g; s/jane@company\\\\.com/jane@example.com/g' /Users/girijaseshachala/Documents/Agile-fresh/components/AgileEdgeMVP.jsx /Users/girijaseshachala/Documents/Agile-fresh/app/quick-register/QuickRegisterClient.jsx)",
+      "Bash(sed -i '' 's/Work Email \\\\*/Email Address */g; s/Work Email/Email Address/g' '/Users/girijaseshachala/Documents/Agile-fresh/app/q/[code]/page.js')",
+      "WebFetch(domain:claude.ai)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=628&fit=crop&q=80\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=1200&h=628&fit=crop&q=80\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=628&fit=crop&q=80\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=628&fit=crop&q=80\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&h=628&fit=crop&q=80\")",
+      "Bash(node -e ':*)",
+      "Bash(curl -I \"https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1200&h=628&fit=crop&q=80\")",
+      "Bash(curl -I \"https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&h=628&fit=crop&q=80\")",
+      "Bash(curl -I \"https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1200&h=628&fit=crop&q=80\")",
+      "Bash(curl -I \"https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1200&h=628&fit=crop&q=80\")",
+      "Bash(curl -I \"https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&h=628&fit=crop&q=80\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1200&h=628&fit=crop&q=80\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&h=628&fit=crop&q=80\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1200&h=628&fit=crop&q=80\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1200&h=628&fit=crop&q=80\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&h=628&fit=crop&q=80\")",
+      "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_6Vzryc0MkCst@ep-spring-thunder-ai5id9x9-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require\" node /tmp/safe_articles.js)",
+      "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_6Vzryc0MkCst@ep-spring-thunder-ai5id9x9-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require\" node safe_articles.js)",
+      "Bash(grep -E \"\\\\.\\(js|ts|jsx|tsx\\)$\")",
+      "Bash(node /tmp/seed-articles.js)",
+      "Bash(node seed-articles.js)",
+      "Bash(node seed-articles2.js)",
+      "Bash(node seed-articles3.js)",
+      "Bash(node seed-articles4.js)",
+      "Bash(node seed-articles5.js)"
+    ],
+    "additionalDirectories": [
+      "/tmp",
+      "/Users/girijaseshachala/Documents/Agile-fresh/app/q/[code]"
+    ]
+  }
+}

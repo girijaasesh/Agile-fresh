@@ -81,16 +81,27 @@
   border-bottom: 1px solid #e5e7eb;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border-radius: 12px 12px 0 0;
 }
 
 .modalHeader h3 {
-  margin: 0;
+  margin: 0 0 8px 0;
   font-size: 18px;
   font-weight: 600;
+}
+
+.phoneLink {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.phoneLink:hover {
+  color: white;
 }
 
 .closeButton {
