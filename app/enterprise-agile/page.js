@@ -291,6 +291,10 @@ export default function EnterpriseAgilePage() {
               style={{ display: 'block', background: BG_DARK, color: '#F7F6F2', padding: '16px 32px', fontWeight: 700, fontSize: 16, textDecoration: 'none', textAlign: 'center', borderRadius: 6 }}>
               Schedule a Consultation →
             </a>
+            <a href="tel:2272921497"
+              style={{ display: 'block', textAlign: 'center', fontSize: 15, color: '#667eea', fontWeight: 600, textDecoration: 'none' }}>
+              (227) 292-1497
+            </a>
             <a href="mailto:consulting@optim-sol.com"
               style={{ display: 'block', textAlign: 'center', fontSize: 15, color: MUTED, textDecoration: 'none' }}>
               consulting@optim-sol.com
