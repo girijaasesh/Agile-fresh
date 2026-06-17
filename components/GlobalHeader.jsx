@@ -37,6 +37,46 @@ export default function GlobalHeader() {
         .gh-nav-links { display: flex; align-items: center; gap: 4px; }
         .gh-hamburger { display: none; }
         .gh-mobile-menu { display: none; }
+
+        @keyframes gh-pulse {
+          0%   { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.65); }
+          70%  { box-shadow: 0 0 0 12px rgba(249, 115, 22, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
+        }
+        @keyframes gh-ring {
+          0%   { transform: rotate(0deg); }
+          10%  { transform: rotate(-14deg); }
+          20%  { transform: rotate(14deg); }
+          30%  { transform: rotate(-9deg); }
+          40%  { transform: rotate(9deg); }
+          50%  { transform: rotate(0deg); }
+          100% { transform: rotate(0deg); }
+        }
+        @keyframes gh-flash {
+          0%, 100% { opacity: 1; }
+          50%       { opacity: 0.55; }
+        }
+
+        .gh-phone-btn {
+          display: inline-flex; align-items: center; gap: 9px;
+          padding: 7px 16px 7px 8px;
+          border: 2px solid #f97316; border-radius: 50px;
+          text-decoration: none; margin-left: 10px;
+          transition: background 0.2s;
+        }
+        .gh-phone-btn:hover { background: rgba(249,115,22,0.07); }
+        .gh-phone-icon {
+          background: #f97316; color: white;
+          width: 30px; height: 30px; border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 14px; flex-shrink: 0;
+          animation: gh-pulse 1.8s ease-out infinite, gh-ring 2.5s ease-in-out infinite;
+        }
+        .gh-phone-num {
+          font-size: 13px; font-weight: 700; color: #f97316;
+          animation: gh-flash 1.8s ease-in-out infinite;
+        }
+
         @media (max-width: 680px) {
           .gh-nav-links { display: none; }
           .gh-hamburger { display: flex; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 6px; }
@@ -54,11 +94,13 @@ export default function GlobalHeader() {
             border-bottom: 1px solid #EEE;
           }
           .gh-mobile-menu a:last-child { border-bottom: none; }
-          .gh-mobile-menu .gh-cta {
-            margin-top: 10px; background: #111; color: #FAFAF8;
-            padding: 13px 22px; font-size: 14px; font-weight: 600;
-            text-align: center; border-radius: 4px; border-bottom: none;
+          .gh-mobile-phone {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            margin-top: 10px; border: 2px solid #f97316; border-radius: 50px;
+            padding: 10px 18px; text-decoration: none; border-bottom: 2px solid #f97316 !important;
           }
+          .gh-mobile-phone .gh-phone-icon { animation: gh-pulse 1.8s ease-out infinite, gh-ring 2.5s ease-in-out infinite; }
+          .gh-mobile-phone .gh-phone-num { font-size: 15px; font-weight: 700; color: #f97316; animation: gh-flash 1.8s ease-in-out infinite; }
         }
       `}</style>
 
@@ -116,14 +158,10 @@ export default function GlobalHeader() {
             }}>
               Quick Register
             </Link>
-            <a href="/#contact" style={{
-              marginLeft: 8,
-              background: '#111', color: '#FAFAF8',
-              padding: '9px 22px', fontSize: 13, fontWeight: 600,
-              textDecoration: 'none', borderRadius: 3,
-            }}>
-              Let's Talk
-            </a>
+            <span className="gh-phone-btn">
+              <span className="gh-phone-icon">📞</span>
+              <span className="gh-phone-num">+12272921497</span>
+            </span>
           </div>
 
           {/* Hamburger */}
@@ -144,7 +182,10 @@ export default function GlobalHeader() {
             </Link>
           ))}
           <Link href="/quick-register" style={{ color: '#111', fontWeight: 700, border: '1.5px solid #111', borderRadius: 4, textAlign: 'center', padding: '12px 22px', marginTop: 4, borderBottom: 'none' }}>Quick Register</Link>
-          <a href="/#contact" className="gh-cta">Let's Talk</a>
+          <span className="gh-mobile-phone">
+            <span className="gh-phone-icon">📞</span>
+            <span className="gh-phone-num">+12272921497</span>
+          </span>
         </div>
       )}
     </>

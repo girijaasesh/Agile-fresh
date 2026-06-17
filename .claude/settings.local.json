@@ -11,7 +11,8 @@
       "Bash(curl -s -b /tmp/admin_cookies.txt -X POST http://localhost:3000/api/admin/articles -H 'Content-Type: application/json' -d '{ *)",
       "Bash(python3 -m json.tool)",
       "WebFetch(domain:unsplash.com)",
-      "Bash(curl -s -b /tmp/admin_cookies.txt -X PATCH http://localhost:3000/api/admin/articles -H 'Content-Type: application/json' -d '{ *)"
+      "Bash(curl -s -b /tmp/admin_cookies.txt -X PATCH http://localhost:3000/api/admin/articles -H 'Content-Type: application/json' -d '{ *)",
+      "WebFetch(domain:staragile.com)"
     ]
   }
 }

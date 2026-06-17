@@ -46,6 +46,7 @@ export default function EnterpriseAgilePage() {
           .ea-footer        { flex-direction: column !important; gap: 6px !important; text-align: center; }
           .ea-pad           { padding: 32px 18px !important; }
         }
+
       `}</style>
 
       {/* ── HERO ── */}
@@ -286,51 +287,18 @@ export default function EnterpriseAgilePage() {
             </p>
             <p style={{ fontSize: 14, color: FAINT, fontStyle: 'italic', margin: 0 }}>The first conversation is a consultation, not a pitch.</p>
           </div>
-          <div className="ea-contact-right" style={{ paddingLeft: 64, display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'flex-start' }}>
+          <div className="ea-contact-right" style={{ paddingLeft: 64, display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'center' }}>
             <a href="mailto:consulting@optim-sol.com?subject=Strategic Partnership Consultation Request"
               style={{ display: 'block', background: BG_DARK, color: '#F7F6F2', padding: '16px 32px', fontWeight: 700, fontSize: 16, textDecoration: 'none', textAlign: 'center', borderRadius: 6, width: '100%' }}>
               Schedule a Consultation →
             </a>
 
-            {/* Phone Button */}
-            <a href="tel:2272921497"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 14,
-                padding: '12px 24px',
-                border: '2px solid #1F2937',
-                borderRadius: 50,
-                textDecoration: 'none',
-                transition: 'all 0.3s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#16a34a';
-                e.currentTarget.style.background = 'rgba(22, 163, 74, 0.05)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = '#1F2937';
-                e.currentTarget.style.background = 'transparent';
-              }}>
-              <div style={{
-                background: '#16a34a',
-                color: 'white',
-                width: 40,
-                height: 40,
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-                fontSize: 18,
-              }}>
-                📞
-              </div>
-              <span style={{ fontSize: 16, fontWeight: 600, color: TEXT }}>+1 (227) 292-1497</span>
-            </a>
+            <span style={{ display: 'block', textAlign: 'center', fontSize: 14, color: MUTED, fontWeight: 500 }}>
+              📞 +1 (227) 292-1497
+            </span>
 
             <a href="mailto:consulting@optim-sol.com"
-              style={{ display: 'block', textAlign: 'left', fontSize: 14, color: MUTED, textDecoration: 'none', fontWeight: 500 }}>
+              style={{ display: 'block', textAlign: 'center', fontSize: 14, color: MUTED, textDecoration: 'none', fontWeight: 500 }}>
               consulting@optim-sol.com
             </a>
             <p style={{ fontSize: 13, color: FAINT, fontStyle: 'italic', margin: 0 }}>
