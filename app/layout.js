@@ -1,5 +1,6 @@
 import Providers from './providers';
 import GlobalHeader from '../components/GlobalHeader';
+import MessengerWidget from '../components/MessengerWidget';
 import './globals.css';
 
 export const metadata = {
@@ -20,6 +21,7 @@ export default function RootLayout({ children }) {
         <Providers>
           <GlobalHeader />
           {children}
+          <MessengerWidget />
         </Providers>
       </body>
     </html>
