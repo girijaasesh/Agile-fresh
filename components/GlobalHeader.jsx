@@ -124,15 +124,6 @@ export default function GlobalHeader() {
             }}>
               Let's Talk
             </a>
-            <a href="tel:2272921497" style={{
-              marginLeft: 8,
-              background: 'transparent', color: '#667eea',
-              padding: '9px 16px', fontSize: 13, fontWeight: 600,
-              textDecoration: 'none', borderRadius: 3,
-              border: '1.5px solid #667eea',
-            }}>
-              (227) 292-1497
-            </a>
           </div>
 
           {/* Hamburger */}
@@ -154,7 +145,6 @@ export default function GlobalHeader() {
           ))}
           <Link href="/quick-register" style={{ color: '#111', fontWeight: 700, border: '1.5px solid #111', borderRadius: 4, textAlign: 'center', padding: '12px 22px', marginTop: 4, borderBottom: 'none' }}>Quick Register</Link>
           <a href="/#contact" className="gh-cta">Let's Talk</a>
-          <a href="tel:2272921497" style={{ color: '#667eea', background: 'transparent', fontWeight: 700, borderRadius: 4, textAlign: 'center', padding: '12px 22px', textDecoration: 'none', borderBottom: 'none', border: '1.5px solid #667eea' }}>(227) 292-1497</a>
         </div>
       )}
     </>
