@@ -93,7 +93,7 @@ export default function MessengerWidget() {
               <div>
                 <h3>Get in Touch</h3>
                 <a href="tel:2272921497" className={styles.phoneLink}>
-                  📞 Call us at (227) 292-1497
+                  📞 (227) 292-1497
                 </a>
               </div>
               <button
